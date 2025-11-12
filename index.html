@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mod展示馆 - KooK频道</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #6c5ce7;
+            --primary-dark: #5649c0;
+            --secondary: #00cec9;
+            --dark: #1a1a2e;
+            --darker: #16213e;
+            --light: #f0f0f0;
+            --gray: #8a8a8a;
+            --success: #00b894;
+        }
+        
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, var(--dark), var(--darker));
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+        
+        nav a:hover, nav a.active {
+            color: var(--primary);
+            background: rgba(108, 92, 231, 0.1);
+        }
+        
+        .search-bar {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 8px 15px;
+            width: 300px;
+        }
+        
+        .search-bar input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--light);
+            width: 100%;
+            padding: 0 10px;
+        }
+        
+        .search-bar button {
+            background: transparent;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .search-bar button:hover {
+            color: var(--primary);
+        }
+        
+        /* 英雄区域样式 */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(rgba(22, 33, 62, 0.9), rgba(22, 33, 62, 0.9)), 
+                        url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--gray);
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 2px solid var(--primary);
+        }
+        
+        .cta-button:hover {
+            background: transparent;
+            color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+        }
+        
+        /* 分类筛选样式 */
+        .filters {
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: var(--light);
+            padding: 8px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Mod展示区域样式 */
+        .mods-section {
+            padding: 40px 0 80px;
+        }
+        
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+        
+        .mods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .mod-card {
+            background: var(--dark);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .mod-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .mod-image {
+            height: 180px;
+            width: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .mod-content {
+            padding: 20px;
+        }
+        
+        .mod-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+        
+        .mod-description {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .mod-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .mod-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .mod-tag {
+            background: rgba(108, 92, 231, 0.2);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .mod-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .download-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .download-btn:hover {
+            background: #00a085;
+        }
+        
+        .details-btn {
+            background: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .details-btn:hover {
+            background: rgba(108, 92, 231, 0.1);
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background: var(--dark);
+            padding: 50px 0 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--light);
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: var(--primary);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--light);
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+            
+            .search-bar {
+                width: 100%;
+                max-width: 400px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .mods-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部导航 -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <div class="logo-text">Mod展示馆</div>
+                </div>
+                
+                <nav>
+                    <ul>
+                        <li><a href="#" class="active">首页</a></li>
+                        <li><a href="#">Mod库</a></li>
+                        <li><a href="#">教程</a></li>
+                        <li><a href="#">社区</a></li>
+                        <li><a href="#">关于</a></li>
+                    </ul>
+                </nav>
+                
+                <div class="search-bar">
+                    <input type="text" placeholder="搜索Mod...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 英雄区域 -->
+    <section class="hero">
+        <div class="container">
+            <h1>探索无限可能的Mod世界</h1>
+            <p>发现、下载并分享最优秀的游戏模组。从视觉增强到全新游戏体验，这里应有尽有。</p>
+            <a href="#" class="cta-button">开始探索 <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <!-- 分类筛选 -->
+    <section class="filters">
+        <div class="container">
+            <h2>按类别浏览</h2>
+            <div class="filter-buttons">
+                <button class="filter-btn active">全部</button>
+                <button class="filter-btn">图形增强</button>
+                <button class="filter-btn">游戏玩法</button>
+                <button class="filter-btn">角色/皮肤</button>
+                <button class="filter-btn">工具/实用</button>
+                <button class="filter-btn">地图/世界</button>
+                <button class="filter-btn">音效/音乐</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mod展示区域 -->
+    <section class="mods-section">
+        <div class="container">
+            <h2 class="section-title">热门Mod推荐</h2>
+            <div class="mods-grid">
+                <!-- Mod卡片1 -->
+                <div class="mod-card">
+                    <div class="mod-image" style="background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80');"></div>
+                    <div class="mod-content">
+                        <h3 class="mod-title">高清材质包 v2.5</h3>
+                        <p class="mod-description">彻底提升游戏画质，提供4K分辨率纹理，让游戏世界更加真实细腻。</p>
+                        <div class="mod-meta">
+                            <span><i class="far fa-calendar"></i> 2023-10-15</span>
+                            <span><i class="far fa-star"></i> 4.8 (1.2k)</span>
+                        </div>
+                        <div class="mod-tags">
+                            <span class="mod-tag">图形</span>
+                            <span class="mod-tag">高清</span>
+                            <span class="mod-tag">材质</span>
+                        </div>
+                        <div class="mod-actions">
+                            <button class="download-btn"><i class="fas fa-download"></i> 下载</button>
+                            <button class="details-btn">详情</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mod卡片2 -->
+                <div class="mod-card">
+                    <div class="mod-image" style="background-image: url('https://images.unsplash.com/photo-1552820728-8b83bb6b773f?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80');"></div>
+                    <div class="mod-content">
+                        <h3 class="mod-title">生存增强模组</h3>
+                        <p class="mod-description">添加新的生存机制、 crafting 配方和挑战，让生存模式更具深度和挑战性。</p>
+                        <div class="mod-meta">
+                            <span><i class="far fa-calendar"></i> 2023-09-28</span>
+                            <span><i class="far fa-star"></i> 4.6 (890)</span>
+                        </div>
+                        <div class="mod-tags">
+                            <span class="mod-tag">玩法</span>
+                            <span class="mod-tag">生存</span>
+                            <span class="mod-tag">挑战</span>
+                        </div>
+                        <div class="mod-actions">
+                            <button class="download-btn"><i class="fas fa-download"></i> 下载</button>
+                            <button class="details-btn">详情</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mod卡片3 -->
+                <div class="mod-card">
+                    <div class="mod-image" style="background-image: url('https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80');"></div>
+                    <div class="mod-content">
+                        <h3 class="mod-title">魔法世界扩展</h3>
+                        <p class="mod-description">引入全新的魔法系统、咒语和魔法生物，为游戏添加丰富的魔法元素。</p>
+                        <div class="mod-meta">
+                            <span><i class="far fa-calendar"></i> 2023-10-05</span>
+                            <span><i class="far fa-star"></i> 4.9 (1.5k)</span>
+                        </div>
+                        <div class="mod-tags">
+                            <span class="mod-tag">魔法</span>
+                            <span class="mod-tag">扩展</span>
+                            <span class="mod-tag">奇幻</span>
+                        </div>
+                        <div class="mod-actions">
+                            <button class="download-btn"><i class="fas fa-download"></i> 下载</button>
+                            <button class="details-btn">详情</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mod卡片4 -->
+                <div class="mod-card">
+                    <div class="mod-image" style="background-image: url('https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80');"></div>
+                    <div class="mod-content">
+                        <h3 class="mod-title">未来科技包</h3>
+                        <p class="mod-description">添加高科技武器、载具和设备，将游戏带入科幻未来世界。</p>
+                        <div class="mod-meta">
+                            <span><i class="far fa-calendar"></i> 2023-09-15</span>
+                            <span><i class="far fa-star"></i> 4.7 (1.1k)</span>
+                        </div>
+                        <div class="mod-tags">
+                            <span class="mod-tag">科技</span>
+                            <span class="mod-tag">未来</span>
+                            <span class="mod-tag">武器</span>
+                        </div>
+                        <div class="mod-actions">
+                            <button class="download-btn"><i class="fas fa-download"></i> 下载</button>
+                            <button class="details-btn">详情</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mod卡片5 -->
+                <div class="mod-card">
+                    <div class="mod-image" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80');"></div>
+                    <div class="mod-content">
+                        <h3 class="mod-title">光影着色器</h3>
+                        <p class="mod-description">高级光影效果，动态阴影和反射，让游戏画面达到电影级质感。</p>
+                        <div class="mod-meta">
+                            <span><i class="far fa-calendar"></i> 2023-10-10</span>
+                            <span><i class="far fa-star"></i> 4.5 (760)</span>
+                        </div>
+                        <div class="mod-tags">
+                            <span class="mod-tag">图形</span>
+                            <span class="mod-tag">光影</span>
+                            <span class="mod-tag">着色器</span>
+                        </div>
+                        <div class="mod-actions">
+                            <button class="download-btn"><i class="fas fa-download"></i> 下载</button>
+                            <button class="details-btn">详情</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mod卡片6 -->
+                <div class="mod-card">
+                    <div class="mod-image" style="background-image: url('https://images.unsplash.com/photo-1542751110-97427bbecf20?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80');"></div>
+                    <div class="mod-content">
+                        <h3 class="mod-title">中世纪建筑集</h3>
+                        <p class="mod-description">添加大量中世纪风格建筑元素和结构，打造真实的城堡和村庄。</p>
+                        <div class="mod-meta">
+                            <span><i class="far fa-calendar"></i> 2023-09-20</span>
+                            <span><i class="far fa-star"></i> 4.8 (980)</span>
+                        </div>
+                        <div class="mod-tags">
+                            <span class="mod-tag">建筑</span>
+                            <span class="mod-tag">中世纪</span>
+                            <span class="mod-tag">装饰</span>
+                        </div>
+                        <div class="mod-actions">
+                            <button class="download-btn"><i class="fas fa-download"></i> 下载</button>
+                            <button class="details-btn">详情</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>关于我们</h3>
+                    <p>Mod展示馆是KooK频道的一部分，致力于为玩家提供最优质的游戏模组资源和社区交流平台。</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-discord"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="#">首页</a></li>
+                        <li><a href="#">Mod库</a></li>
+                        <li><a href="#">提交Mod</a></li>
+                        <li><a href="#">使用指南</a></li>
+                        <li><a href="#">社区准则</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>支持的游戏</h3>
+                    <ul>
+                        <li><a href="#">Minecraft</a></li>
+                        <li><a href="#">GTA V</a></li>
+                        <li><a href="#">Skyrim</a></li>
+                        <li><a href="#">Stardew Valley</a></li>
+                        <li><a href="#">更多游戏...</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>联系我们</h3>
+                    <ul>
+                        <li><i class="fas fa-envelope"></i> contact@modgallery.com</li>
+                        <li><i class="fas fa-comment"></i> 在线客服</li>
+                        <li><i class="fas fa-question-circle"></i> 帮助中心</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Mod展示馆 - KooK频道. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 简单的分类筛选功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 移除所有按钮的active类
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    // 为当前点击的按钮添加active类
+                    this.classList.add('active');
+                    
+                    // 这里可以添加实际的筛选逻辑
+                    // 例如根据按钮的文本内容筛选Mod卡片
+                });
+            });
+            
+            // 为下载按钮添加点击事件
+            const downloadButtons = document.querySelectorAll('.download-btn');
+            downloadButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('下载功能即将实现！');
+                });
+            });
+            
+            // 为详情按钮添加点击事件
+            const detailButtons = document.querySelectorAll('.details-btn');
+            detailButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    alert('详情页面正在开发中！');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
