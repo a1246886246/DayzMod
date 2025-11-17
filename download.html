@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dayz模组展示 - 下载中心</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 导航条 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h1>Dayz模组展示</h1>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a href="mods.html" class="nav-link">模组列表</a>
+                </li>
+                <li class="nav-item">
+                    <a href="download.html" class="nav-link active">下载中心</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">关于我们</a>
+                </li>
+            </ul>
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <main class="main-content">
+        <section class="page-content">
+            <div class="container">
+                <div class="page-header">
+                    <h2>模组下载中心</h2>
+                    <p>下载最新版本的Dayz模组，包含详细的安装指南</p>
+                </div>
+
+                <!-- 热门下载 -->
+                <div class="popular-downloads">
+                    <h3>热门下载</h3>
+                    <div class="download-grid">
+                        <div class="download-item">
+                            <div class="download-header">
+                                <h4>现代武器包</h4>
+                                <span class="download-badge">热门</span>
+                            </div>
+                            <div class="download-info">
+                                <p>版本: v2.1.0</p>
+                                <p>大小: 256MB</p>
+                                <p>更新: 2024-01-15</p>
+                            </div>
+                            <div class="download-actions">
+                                <button class="download-btn" data-mod="现代武器包">立即下载</button>
+                                <a href="#" class="details-link">查看详情</a>
+                            </div>
+                        </div>
+
+                        <div class="download-item">
+                            <div class="download-header">
+                                <h4>军用载具包</h4>
+                                <span class="download-badge">热门</span>
+                            </div>
+                            <div class="download-info">
+                                <p>版本: v3.0.1</p>
+                                <p>大小: 512MB</p>
+                                <p>更新: 2024-01-12</p>
+                            </div>
+                            <div class="download-actions">
+                                <button class="download-btn" data-mod="军用载具包">立即下载</button>
+                                <a href="#" class="details-link">查看详情</a>
+                            </div>
+                        </div>
+
+                        <div class="download-item">
+                            <div class="download-header">
+                                <h4>生存基地建设</h4>
+                                <span class="download-badge">推荐</span>
+                            </div>
+                            <div class="download-info">
+                                <p>版本: v4.1.2</p>
+                                <p>大小: 640MB</p>
+                                <p>更新: 2024-01-05</p>
+                            </div>
+                            <div class="download-actions">
+                                <button class="download-btn" data-mod="生存基地建设">立即下载</button>
+                                <a href="#" class="details-link">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 完整模组列表 -->
+                <div class="full-downloads">
+                    <h3>全部模组</h3>
+                    <div class="download-list">
+                        <div class="download-list-item">
+                            <div class="item-info">
+                                <h4>特种装备扩展</h4>
+                                <p>版本: v1.5.3 | 大小: 128MB</p>
+                            </div>
+                            <button class="download-btn small" data-mod="特种装备扩展">下载</button>
+                        </div>
+
+                        <div class="download-list-item">
+                            <div class="item-info">
+                                <h4>直升机扩展</h4>
+                                <p>版本: v2.2.0 | 大小: 384MB</p>
+                            </div>
+                            <button class="download-btn small" data-mod="直升机扩展">下载</button>
+                        </div>
+
+                        <div class="download-list-item">
+                            <div class="item-info">
+                                <h4>高级生存系统</h4>
+                                <p>版本: v1.8.0 | 大小: 96MB</p>
+                            </div>
+                            <button class="download-btn small" data-mod="高级生存系统">下载</button>
+                        </div>
+
+                        <div class="download-list-item">
+                            <div class="item-info">
+                                <h4>农业种植系统</h4>
+                                <p>版本: v2.3.1 | 大小: 72MB</p>
+                            </div>
+                            <button class="download-btn small" data-mod="农业种植系统">下载</button>
+                        </div>
+
+                        <div class="download-list-item">
+                            <div class="item-info">
+                                <h4>狙击手专用包</h4>
+                                <p>版本: v1.2.5 | 大小: 184MB</p>
+                            </div>
+                            <button class="download-btn small" data-mod="狙击手专用包">下载</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 安装指南 -->
+                <div class="installation-guide">
+                    <h3>安装指南</h3>
+                    <div class="guide-tabs">
+                        <button class="guide-tab active" data-target="guide-basic">基础安装</button>
+                        <button class="guide-tab" data-target="guide-advanced">高级安装</button>
+                        <button class="guide-tab" data-target="guide-troubleshoot">故障排除</button>
+                    </div>
+                    
+                    <div class="guide-content active" id="guide-basic">
+                        <h4>基础安装步骤</h4>
+                        <ol>
+                            <li>下载你想要的模组文件</li>
+                            <li>解压下载的文件到Dayz游戏目录的"@模组名"文件夹</li>
+                            <li>启动Dayz启动器，在模组管理中添加该模组</li>
+                            <li>确保模组加载顺序正确，然后启动游戏</li>
+                        </ol>
+                        <div class="note">
+                            <strong>注意：</strong>请确保你的Dayz游戏版本与模组要求版本相匹配。
+                        </div>
+                    </div>
+
+                    <div class="guide-content" id="guide-advanced">
+                        <h4>高级安装方法</h4>
+                        <p>对于服务器管理员或想要自定义安装的用户：</p>
+                        <ul>
+                            <li>使用Dayz Server Manager进行批量安装</li>
+                            <li>配置模组依赖关系和加载顺序</li>
+                            <li>设置自动更新机制</li>
+                            <li>调试模组冲突和性能优化</li>
+                        </ul>
+                    </div>
+
+                    <div class="guide-content" id="guide-troubleshoot">
+                        <h4>常见问题解决</h4>
+                        <div class="troubleshoot-item">
+                            <h5>游戏崩溃</h5>
+                            <p>检查模组兼容性，确保所有依赖模组已正确安装。</p>
+                        </div>
+                        <div class="troubleshoot-item">
+                            <h5>模组不显示</h5>
+                            <p>确认模组文件夹命名正确，检查启动器中的模组是否已启用。</p>
+                        </div>
+                        <div class="troubleshoot-item">
+                            <h5>性能问题</h5>
+                            <p>降低图形设置，关闭不必要的模组，检查硬件配置。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Dayz模组展示. 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
