@@ -1,4 +1,4 @@
-// Dayz模组展示系统 - 现代化架构设计
+// DayZ社区模组展示系统 - 现代化架构设计
 // 基于10年经验的前端技术总监重构
 
 // 全局状态管理器
@@ -456,7 +456,7 @@ class ModsApp {
     }
     
     startApp() {
-        console.log('启动Dayz模组展示应用');
+        console.log('启动DayZ社区模组展示应用');
         
         // 初始化各个组件
         this.stateManager = new ModsStateManager();
@@ -1182,4 +1182,4 @@ if (modDetails[itemKey]) {
     document.getElementById("item-description").textContent = "请返回模组列表选择一个有效的模组。";
 }
 
-console.log('Dayz模组展示系统加载完成 - 现代化架构设计');
+console.log('DayZ社区模组展示系统加载完成 - 现代化架构设计');
