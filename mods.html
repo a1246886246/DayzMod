@@ -21,9 +21,6 @@
                     <a href="mods.html" class="nav-link active">模组列表</a>
                 </li>
                 <li class="nav-item">
-                    <a href="download.html" class="nav-link">下载中心</a>
-                </li>
-                <li class="nav-item">
                     <a href="about.html" class="nav-link">关于我们</a>
                 </li>
             </ul>
@@ -40,7 +37,7 @@
         <section class="page-content">
             <div class="container">
                 <div class="page-header">
-                    <h2>Dayz模组库</h2>
+                    <h2>Dayz模展示库</h2>
                     <p>探索我们精心挑选的优质模组，提升你的游戏体验</p>
                 </div>
 
@@ -49,196 +46,62 @@
                     <div class="search-box">
                         <input type="text" id="modSearch" placeholder="搜索模组名称或描述..." class="search-input">
                     </div>
-                    <div class="filter-buttons">
-                        <button class="filter-btn active" data-filter="all">全部</button>
-                        <button class="filter-btn" data-filter="weapon">武器</button>
-                        <button class="filter-btn" data-filter="vehicle">载具</button>
-                        <button class="filter-btn" data-filter="building">建筑</button>
-                        <button class="filter-btn" data-filter="survival">生存</button>
+                    <div class="filter-panel">
+                        <div class="filter-row">
+                            <span class="filter-label">大类：</span>
+                            <button class="filter-btn">全部</button>
+                            <button class="filter-btn">武器</button>
+                            <button class="filter-btn">服装</button>
+                            <button class="filter-btn">载具</button>
+                            <button class="filter-btn">建筑</button>
+                            <button class="filter-btn">工具</button>
+                            <button class="filter-btn">功能</button>
+                        </div>
+                        <div class="filter-row">
+                            <span class="filter-label">模块：</span>
+                            <button class="filter-btn">全部</button>
+                            <button class="filter-btn">枪械</button>
+                            <button class="filter-btn">配件</button>
+                            <button class="filter-btn">近身武器</button>
+                            <button class="filter-btn">投掷武器</button>
+                            <button class="filter-btn">套装</button>
+                            <button class="filter-btn">头盔</button>
+                            <button class="filter-btn">眼镜</button>
+                            <button class="filter-btn">面具</button>
+                            <button class="filter-btn">上衣</button>
+                            <button class="filter-btn">防弹衣</button>
+                            <button class="filter-btn">手套</button>
+                            <button class="filter-btn">背包</button>
+                            <button class="filter-btn">腰带</button>
+                            <button class="filter-btn">裤子</button>
+                            <button class="filter-btn">鞋子</button>
+                            <button class="filter-btn">汽车</button>
+                            <button class="filter-btn">摩托车</button>
+                            <button class="filter-btn">直升机</button>
+                            <button class="filter-btn">船只</button>
+                            <button class="filter-btn">房屋</button>
+                            <button class="filter-btn">围栏</button>
+                            <button class="filter-btn">门</button>
+                            <button class="filter-btn">楼梯</button>
+                            <button class="filter-btn">装饰</button>
+                            <button class="filter-btn">修理工具</button>
+                            <button class="filter-btn">医疗工具</button>
+                            <button class="filter-btn">烹饪工具</button>
+                            <button class="filter-btn">采集工具</button>
+                            <button class="filter-btn">天气系统</button>
+                            <button class="filter-btn">任务系统</button>
+                            <button class="filter-btn">经济系统</button>
+                            <button class="filter-btn">AI系统</button>
+                            <button class="filter-btn">特殊功能</button>
+                            <button class="filter-btn">交互系统</button>
+                            <button class="filter-btn">娱乐组件</button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 模组列表 -->
-                <div class="mod-list">
-                    <!-- 武器模组 -->
-                    <div class="mod-item" data-category="weapon">
-                        <div class="mod-item-header">
-                            <h3>现代武器包</h3>
-                            <span class="mod-version">v2.1.0</span>
-                        </div>
-                        <div class="mod-description">
-                            添加超过30种现代军事武器，包括M4A1、AK-47、狙击步枪等。所有武器都有精美的模型和真实的射击体验。
-                        </div>
-                        <div class="mod-details">
-                            <div class="mod-detail">
-                                <span>大小: 256MB</span>
-                            </div>
-                            <div class="mod-detail">
-                                <span>下载量: 15,247</span>
-                            </div>
-                            <div class="mod-detail">
-                                <span>更新: 2024-01-15</span>
-                            </div>
-                        </div>
-                        <a href="download.html" class="download-btn">查看详情</a>
-                    </div>
-
-                    <div class="mod-item" data-category="weapon">
-                        <div class="mod-item-header">
-                            <h3>特种装备扩展</h3>
-                            <span class="mod-version">v1.5.3</span>
-                        </div>
-                        <div class="mod-description">
-                            新增特种部队装备，包括夜视仪、战术背心、军用头盔等专业装备，提升战斗体验。
-                        </div>
-                        <div class="mod-details">
-                            <div class="mod-detail">
-                                <span>大小: 128MB</span>
-                            </div>
-                            <div class="mod-detail">
-                                <span>下载量: 8,932</span>
-                            </div>
-                            <div class="mod-detail">
-                                <span>更新: 2024-01-10</span>
-                            </div>
-                        </div>
-                        <a href="download.html" class="download-btn">查看详情</a>
-                    </div>
-
-                    <!-- 载具模组 -->
-                    <div class="mod-item" data-category="vehicle">
-                        <div class="mod-item-header">
-                            <h3>军用载具包</h3>
-                            <span class="mod-version">v3.0.1</span>
-                        </div>
-                        <div class="mod-description">
-                            添加军用卡车、装甲车、吉普车等15种军用载具，支持多人乘坐和货物运输功能。
-                        </div>
-                        <div class="mod-details">
-                            <div class="mod-detail">
-                                <span>大小: 512MB</span>
-                            </div>
-                            <div class="mod-detail">
-                                <span>下载量: 12,456</span>
-                            </div>
-                            <div class="mod-detail">
-                                <span>更新: 2024-01-12</span>
-                            </div>
-                        </div>
-                        <a href="download.html" class="download-btn">查看详情</a>
-                    </div>
-
-                    <div class="mod-item" data-category="vehicle">
-                        <div class="mod-item-header">
-                            <h3>直升机扩展</h3>
-                            <span class="mod-version">v2.2.0</span>
-                        </div>
-                        <div class="mod-description">
-                            新增军用直升机和民用直升机，支持空中运输和快速移动，彻底改变游戏交通方式。
-                        </div>
-                        <div class="mod-details">
-                            <div class="mod-detail">
-                                <span>大小: 384MB</span>
-                            </div>
-                            <div class="mod-detail">
-                                <span>下载量: 9,785</span>
-                            </div>
-                            <div class="mod-detail">
-                                <span>更新: 2024-01-08</span>
-                            </div>
-                        </div>
-                        <a href="download.html" class="download-btn">查看详情</a>
-                    </div>
-
-                    <!-- 建筑模组 -->
-                    <div class="mod-item" data-category="building">
-                        <div class="mod-item-header">
-                            <h3>生存基地建设</h3>
-                            <span class="mod-version">v4.1.2</span>
-                        </div>
-                        <div class="mod-description">
-                            提供超过200种建筑组件，包括围墙、瞭望塔、仓库等，打造完美的生存基地。
-                        </div>
-                        <div class="mod-details">
-                            <div class="mod-detail">
-                                <span>大小: 640MB</span>
-                            </div>
-                            <div class="mod-detail">
-                                <span>下载量: 18,324</span>
-                            </div>
-                            <div class="mod-detail">
-                                <span>更新: 2024-01-05</span>
-                            </div>
-                        </div>
-                        <a href="download.html" class="download-btn">查看详情</a>
-                    </div>
-
-                    <!-- 生存模组 -->
-                    <div class="mod-item" data-category="survival">
-                        <div class="mod-item-header">
-                            <h3>高级生存系统</h3>
-                            <span class="mod-version">v1.8.0</span>
-                        </div>
-                        <div class="mod-description">
-                            增强生存体验，添加疾病系统、温度管理、高级烹饪等真实生存机制。
-                        </div>
-                        <div class="mod-details">
-                            <div class="mod-detail">
-                                <span>大小: 96MB</span>
-                            </div>
-                            <div class="mod-detail">
-                                <span>下载量: 7,891</span>
-                            </div>
-                            <div class="mod-detail">
-                                <span>更新: 2024-01-03</span>
-                            </div>
-                        </div>
-                        <a href="download.html" class="download-btn">查看详情</a>
-                    </div>
-
-                    <div class="mod-item" data-category="survival">
-                        <div class="mod-item-header">
-                            <h3>农业种植系统</h3>
-                            <span class="mod-version">v2.3.1</span>
-                        </div>
-                        <div class="mod-description">
-                            添加完整的农业系统，支持种植各种作物，实现自给自足的生存方式。
-                        </div>
-                        <div class="mod-details">
-                            <div class="mod-detail">
-                                <span>大小: 72MB</span>
-                            </div>
-                            <div class="mod-detail">
-                                <span>下载量: 6,543</span>
-                            </div>
-                            <div class="mod-detail">
-                                <span>更新: 2023-12-28</span>
-                            </div>
-                        </div>
-                        <a href="download.html" class="download-btn">查看详情</a>
-                    </div>
-
-                    <div class="mod-item" data-category="weapon">
-                        <div class="mod-item-header">
-                            <h3>狙击手专用包</h3>
-                            <span class="mod-version">v1.2.5</span>
-                        </div>
-                        <div class="mod-description">
-                            专门为狙击手设计的模组，包含多种狙击步枪、伪装装备和测距工具。
-                        </div>
-                        <div class="mod-details">
-                            <div class="mod-detail">
-                                <span>大小: 184MB</span>
-                            </div>
-                            <div class="mod-detail">
-                                <span>下载量: 5,678</span>
-                            </div>
-                            <div class="mod-detail">
-                                <span>更新: 2023-12-25</span>
-                            </div>
-                        </div>
-                        <a href="download.html" class="download-btn">查看详情</a>
-                    </div>
+                <div class="mods-grid">
+                    <!-- 动态渲染模组项 -->
                 </div>
             </div>
         </section>

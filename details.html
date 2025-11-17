@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物品详情</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h1>Dayz模组展示</h1>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a id="back-to-mods" href="mods.html" class="nav-link">模组列表</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">关于我们</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <section class="details-section">
+            <div class="container">
+                <h2 id="item-title">物品标题</h2>
+                <p id="item-description">物品描述</p>
+                <div id="item-images" class="image-gallery">
+                    <!-- 图片将通过 JavaScript 动态加载 -->
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+<script>
+// 自动为“模组列表”导航链接带上cat和mod参数
+document.addEventListener('DOMContentLoaded', function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var cat = urlParams.get('cat');
+    var mod = urlParams.get('mod');
+    if (cat && mod) {
+        var modsLink = document.getElementById('back-to-mods');
+        if (modsLink) {
+            modsLink.href = `mods.html?cat=${encodeURIComponent(cat)}&mod=${encodeURIComponent(mod)}`;
+        }
+    }
+});
+</script>
+</body>
+</html>
