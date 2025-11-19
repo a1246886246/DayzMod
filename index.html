@@ -26,7 +26,13 @@
                 <li class="nav-item">
                     <a href="legal.html" class="nav-link">法律声明</a>
                 </li>
+                <li class="nav-item" id="adminNavItem" style="display: none;">
+                    <a href="admin.html" class="nav-link">管理员面板</a>
+                </li>
             </ul>
+            <div class="user-auth" id="userAuthContainer">
+                <!-- 动态内容将由JavaScript填充 -->
+            </div>
             <div class="nav-toggle">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -37,88 +43,116 @@
 
     <!-- 主内容区域 -->
     <main class="main-content">
+        <!-- 英雄区域 - 紧凑设计，突出特色模组 -->
         <section class="hero">
+            <div class="hero-background">
+                <div class="hero-particles"></div>
+            </div>
             <div class="hero-content">
-                <h2>欢迎来到Sky的DayZ社区模组展示站</h2>
-                <p>探索最精彩的DayZ社区模组，提升你的游戏体验</p>
+                <div class="hero-badge">
+                    <span>🔥 热门推荐</span>
+                </div>
+                <h1 class="hero-title">
+                    <span class="gradient-text">DayZ社区模组</span>
+                    <span class="hero-subtitle">探索无限可能</span>
+                </h1>
+                <p class="hero-description">汇聚最精彩的DayZ社区模组，为你的游戏体验注入全新活力</p>
                 <div class="hero-buttons">
-                    <a href="mods.html" class="btn btn-primary">浏览模组</a>
-                    <a href="about.html" class="btn btn-secondary">联系作者</a>
+                    <a href="mods.html" class="btn btn-primary btn-large">
+                        <span class="btn-icon">🎮</span>
+                        浏览所有模组
+                    </a>
                 </div>
             </div>
         </section>
 
-        <section class="featured-mods">
+        <!-- 特色模组推荐区域 - 重点突出 -->
+        <section class="featured-mods" id="featuredModsSection">
             <div class="container">
-                <h3>特色模组推荐</h3>
-                <div class="mod-grid">
-                    <div class="mod-card">
-                        <div class="mod-image">
-                            <img src="images/weapon-mod.png" alt="武器模组" class="zoomable-image" data-zoom-src="images/weapon-mod.png">
-                        </div>
-                        <div class="mod-info">
-                            <h4>现代武器包</h4>
-                            <p>添加多种现代军事武器，包括突击步枪、狙击枪和手枪</p>
-                            <div class="mod-tags">
-                                <span class="tag">枪械</span>
-                                <span class="tag">军事</span>
-                            </div>
+                
+                <div class="featured-mods-container" id="featuredModsContainer">
+                    <!-- 默认状态：无特色模组时的提示 -->
+                    <div class="no-featured-mods" id="noFeaturedMods">
+                        <div class="empty-state">
+                            <div class="empty-icon">⭐</div>
+                            <h3>暂无特色模组</h3>
+                            <p>管理员尚未设置特色模组推荐</p>
+                            <a href="admin.html" class="btn btn-primary">前往管理面板设置</a>
                         </div>
                     </div>
-
-                    <div class="mod-card">
-                        <div class="mod-image">
-                            <img src="https://via.placeholder.com/300x200/2d3748/ffffff?text=载具模组" alt="载具模组" class="zoomable-image" data-zoom-src="https://via.placeholder.com/800x600/2d3748/ffffff?text=载具模组">
-                        </div>
-                        <div class="mod-info">
-                            <h4>军用载具扩展</h4>
-                            <p>新增军用卡车、装甲车和直升机等交通工具</p>
-                            <div class="mod-tags">
-                                <span class="tag">载具</span>
-                                <span class="tag">军事</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mod-card">
-                        <div class="mod-image">
-                            <img src="https://via.placeholder.com/300x200/805ad5/ffffff?text=建筑模组" alt="建筑模组" class="zoomable-image" data-zoom-src="https://via.placeholder.com/800x600/805ad5/ffffff?text=建筑模组">
-                        </div>
-                        <div class="mod-info">
-                            <h4>生存基地建设</h4>
-                            <p>提供丰富的建筑组件，打造完美的生存基地</p>
-                            <div class="mod-tags">
-                                <span class="tag">建筑</span>
-                                <span class="tag">生存</span>
-                            </div>
-                        </div>
+                    
+                    <!-- 特色模组网格 -->
+                    <div class="featured-mods-grid" id="featuredModsGrid" style="display: none;">
+                        <!-- 模组将通过 JavaScript 动态加载 -->
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- 统计数据区域 - 视觉化展示 -->
         <section class="stats">
             <div class="container">
                 <div class="stats-grid">
                     <div class="stat-item">
-                        <h4>50+</h4>
-                        <p>优质模组</p>
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-content">
+                            <h4 class="stat-number" data-count="50">0</h4>
+                            <p class="stat-label">优质模组</p>
+                        </div>
                     </div>
                     <div class="stat-item">
-                        <h4>1000+</h4>
-                        <p>下载次数</p>
+                        <div class="stat-icon">⬇️</div>
+                        <div class="stat-content">
+                            <h4 class="stat-number" data-count="1000">0</h4>
+                            <p class="stat-label">浏览次数</p>
+                        </div>
                     </div>
                     <div class="stat-item">
-                        <h4>24/7</h4>
-                        <p>技术支持</p>
+                        <div class="stat-icon">🛠️</div>
+                        <div class="stat-content">
+                            <h4 class="stat-number" data-count="24">0</h4>
+                            <p class="stat-label">技术支持</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-content">
+                            <h4 class="stat-number" data-count="500">0</h4>
+                            <p class="stat-label">活跃用户</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 示例图片容器 -->
-        <section class="image-container">
-            <img src="images/example.jpg" alt="示例图片" loading="lazy">
+        <!-- 快速导航区域 -->
+        <section class="quick-nav">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">快速导航</h2>
+                    <p class="section-description">快速访问网站主要功能</p>
+                </div>
+                <div class="nav-grid">
+                    <a href="mods.html" class="nav-card">
+                        <div class="nav-icon">📚</div>
+                        <h3>模组列表</h3>
+                        <p>浏览所有可用模组</p>
+                        <div class="nav-arrow">→</div>
+                    </a>
+                    <a href="about.html" class="nav-card">
+                        <div class="nav-icon">ℹ️</div>
+                        <h3>关于我们</h3>
+                        <p>了解开发团队</p>
+                        <div class="nav-arrow">→</div>
+                    </a>
+                    <a href="legal.html" class="nav-card">
+                        <div class="nav-icon">⚖️</div>
+                        <h3>法律声明</h3>
+                        <p>使用条款和隐私政策</p>
+                        <div class="nav-arrow">→</div>
+                    </a>
+                </div>
+            </div>
         </section>
     </main>
 
@@ -130,5 +164,134 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        // 初始化用户认证管理器
+        document.addEventListener('DOMContentLoaded', function() {
+            new UserAuthManager();
+            loadFeaturedMods();
+            animateStats();
+            initScrollAnimations();
+        });
+        
+        // 加载首页特色模组
+        function loadFeaturedMods() {
+            console.log('开始加载首页特色模组...');
+            
+            const mods = JSON.parse(localStorage.getItem('dayz_mods_production') || '[]');
+            console.log('从localStorage加载的模组数据:', mods);
+            
+            const featuredMods = mods.filter(mod => mod.featured).slice(0, 3); // 最多显示3个
+            console.log('筛选出的首页显示模组:', featuredMods);
+            
+            const noFeaturedMods = document.getElementById('noFeaturedMods');
+            const featuredModsGrid = document.getElementById('featuredModsGrid');
+            
+            console.log('找到的模组容器:', noFeaturedMods, featuredModsGrid);
+            
+            if (featuredMods.length > 0) {
+                noFeaturedMods.style.display = 'none';
+                featuredModsGrid.style.display = 'grid';
+                featuredModsGrid.innerHTML = '';
+                
+                featuredMods.forEach(mod => {
+                    const modCard = document.createElement('div');
+                    modCard.className = 'featured-mod-card';
+                    modCard.innerHTML = `
+                        <div class="featured-mod-badge">⭐ 推荐</div>
+                        <div class="featured-mod-image">
+                            <img src="${mod.image}" alt="${mod.name}" class="zoomable-image" data-zoom-src="${mod.image}">
+                            <div class="featured-mod-overlay">
+                                <div class="featured-mod-actions">
+                                    <a href="details.html?item=${mod.id}" class="btn btn-primary">查看详情</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="featured-mod-info">
+                            <h4 class="featured-mod-title">${mod.name}</h4>
+                            <p class="featured-mod-description">${mod.description}</p>
+                            <div class="featured-mod-tags">
+                                <span class="tag tag-category">${mod.category}</span>
+                                <span class="tag tag-module">${mod.module}</span>
+                            </div>
+                            <div class="featured-mod-footer">
+                                <span class="featured-mod-author">作者: ${mod.author || 'SKY'}</span>
+                                <span class="featured-mod-version">${mod.version ? mod.version.replace(/^v+/i, 'v') : 'v1.0'}</span>
+                            </div>
+                        </div>
+                    `;
+                    featuredModsGrid.appendChild(modCard);
+                });
+                
+                console.log('特色模组卡片已添加到页面');
+                
+                // 初始化图片放大功能
+                if (typeof initImageZoom === 'function') {
+                    initImageZoom();
+                    console.log('图片放大功能已初始化');
+                } else {
+                    console.warn('initImageZoom函数未找到，跳过图片放大功能初始化');
+                }
+            } else {
+                noFeaturedMods.style.display = 'flex';
+                featuredModsGrid.style.display = 'none';
+                console.log('没有设置首页显示的模组，显示空状态');
+            }
+        }
+        
+        // 数字动画效果
+        function animateStats() {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            
+            // 获取模组总数
+            const mods = JSON.parse(localStorage.getItem('dayz_mods_production') || '[]');
+            const modCount = mods.length;
+            
+            statNumbers.forEach(stat => {
+                // 如果是优质模组统计项，直接显示模组总数
+                if (stat.parentElement.querySelector('.stat-label').textContent === '优质模组') {
+                    stat.textContent = modCount;
+                } else {
+                    const target = parseInt(stat.getAttribute('data-count'));
+                    const duration = 2000; // 2秒
+                    const step = target / (duration / 16); // 60fps
+                    let current = 0;
+                    
+                    const timer = setInterval(() => {
+                        current += step;
+                        if (current >= target) {
+                            current = target;
+                            clearInterval(timer);
+                        }
+                        stat.textContent = Math.floor(current);
+                    }, 16);
+                }
+            });
+        }
+        
+        // 滚动动画效果
+        function initScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                    }
+                });
+            }, observerOptions);
+            
+            // 观察需要动画的元素
+            const animatedElements = document.querySelectorAll('.featured-mod-card, .stat-item, .nav-card');
+            animatedElements.forEach(el => observer.observe(el));
+        }
+        
+        // 监听模组更新事件
+        window.addEventListener('mods-updated', function() {
+            loadFeaturedMods();
+        });
+    </script>
 </body>
 </html>

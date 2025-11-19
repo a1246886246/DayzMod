@@ -26,7 +26,13 @@
                 <li class="nav-item">
                     <a href="legal.html" class="nav-link">法律声明</a>
                 </li>
+                <li class="nav-item" id="adminNavItem" style="display: none;">
+                    <a href="admin.html" class="nav-link">管理员面板</a>
+                </li>
             </ul>
+            <div class="user-auth" id="userAuthContainer">
+                <!-- 动态内容将由JavaScript填充 -->
+            </div>
         </div>
     </nav>
 
@@ -35,26 +41,34 @@
             <div class="container">
                 <h2 id="item-title">物品标题</h2>
                 <p id="item-description">物品描述</p>
+                <!-- 模组详细信息将在这里动态插入 -->
+                <div id="mod-details-container"></div>
                 <div id="item-images" class="image-gallery">
                     <!-- 图片将通过 JavaScript 动态加载 -->
                 </div>
             </div>
         </section>
     </main>
-</body>
-<script>
-// 自动为“模组列表”导航链接带上cat和mod参数
-document.addEventListener('DOMContentLoaded', function() {
-    var urlParams = new URLSearchParams(window.location.search);
-    var cat = urlParams.get('cat');
-    var mod = urlParams.get('mod');
-    if (cat && mod) {
-        var modsLink = document.getElementById('back-to-mods');
-        if (modsLink) {
-            modsLink.href = `mods.html?cat=${encodeURIComponent(cat)}&mod=${encodeURIComponent(mod)}`;
-        }
-    }
-});
-</script>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 DayZ社区模组展示. 保留所有权利. <a href="legal.html">法律声明</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // 自动为"模组列表"导航链接带上cat和mod参数
+        document.addEventListener('DOMContentLoaded', function() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var cat = urlParams.get('cat');
+            var mod = urlParams.get('mod');
+            if (cat && mod) {
+                var modsLink = document.getElementById('back-to-mods');
+                if (modsLink) {
+                    modsLink.href = `mods.html?cat=${encodeURIComponent(cat)}&mod=${encodeURIComponent(mod)}`;
+                }
+            }
+        });
+    </script>
 </body>
 </html>

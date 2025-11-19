@@ -26,7 +26,13 @@
                 <li class="nav-item">
                     <a href="legal.html" class="nav-link">法律声明</a>
                 </li>
+                <li class="nav-item" id="adminNavItem" style="display: none;">
+                    <a href="admin.html" class="nav-link">管理员面板</a>
+                </li>
             </ul>
+            <div class="user-auth" id="userAuthContainer">
+                <!-- 动态内容将由JavaScript填充 -->
+            </div>
             <div class="nav-toggle">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -185,5 +191,14 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        // 初始化用户认证管理器
+        document.addEventListener('DOMContentLoaded', function() {
+            // 等待script.js完全加载后再初始化
+            if (typeof UserAuthManager !== 'undefined') {
+                new UserAuthManager();
+            }
+        });
+    </script>
 </body>
 </html>

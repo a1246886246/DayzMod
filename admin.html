@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DayZ社区模组展示 - 管理员面板</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 导航条 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h1>DayZ社区模组展示</h1>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a href="mods.html" class="nav-link">模组列表</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">关于我们</a>
+                </li>
+                <li class="nav-item">
+                    <a href="legal.html" class="nav-link">法律声明</a>
+                </li>
+                <li class="nav-item" id="adminNavItem" style="display: none;">
+                    <a href="admin.html" class="nav-link">管理员面板</a>
+                </li>
+            </ul>
+            <div class="user-auth" id="userAuthContainer">
+                <!-- 动态内容将由JavaScript填充 -->
+            </div>
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <main class="main-content">
+        <section class="page-content">
+            <div class="container">
+                
+                <!-- 管理员权限检查 -->
+                <div id="adminCheck" style="display: none;">
+                    <div class="notification" style="background: #e53e3e; color: white; padding: 1rem; border-radius: 5px; text-align: center; margin: 2rem 0;">
+                        <h3>权限不足</h3>
+                        <p>您需要管理员权限才能访问此页面。</p>
+                        <p>请使用管理员账户登录或联系系统管理员。</p>
+                        <a href="index.html" class="btn btn-primary" style="margin-top: 1rem;">返回首页</a>
+                    </div>
+                </div>
+
+                <!-- 管理员面板内容 -->
+                <div id="adminPanel" style="display: none;">
+                    <!-- 系统统计 -->
+                    <div class="admin-panel">
+                        <div class="admin-header">
+                            <h3 class="admin-title">系统统计</h3>
+                            <div class="admin-actions">
+                                <button class="admin-btn secondary" id="refreshStatsBtn">刷新统计</button>
+                            </div>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-icon">📦</div>
+                                <h4 id="totalMods">0</h4>
+                                <p>总模组数</p>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon">📂</div>
+                                <h4 id="totalCategories">0</h4>
+                                <p>分类数量</p>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon">👥</div>
+                                <h4 id="totalUsers">0</h4>
+                                <p>注册用户</p>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon">⭐</div>
+                                <h4 id="featuredMods">0</h4>
+                                <p>首页推荐</p>
+                            </div>
+                        </div>
+                        <div class="stats-details">
+                            <div class="stats-section">
+                                <h4>模组分类分布</h4>
+                                <div id="categoryChart" class="category-chart">
+                                    <!-- 分类图表将通过JavaScript动态生成 -->
+                                </div>
+                            </div>
+                            <div class="stats-section">
+                                <div class="activity-header">
+                                    <h4>最近活动</h4>
+                                    <select id="activityFilter" class="activity-filter">
+                                        <option value="all">全部活动</option>
+                                        <option value="today">今日活动</option>
+                                        <option value="week">本周活动</option>
+                                        <option value="month">本月活动</option>
+                                    </select>
+                                </div>
+                                <div id="recentActivity" class="activity-dropdown">
+                                    <!-- 最近活动将通过JavaScript动态生成 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 模组管理 -->
+                    <div class="admin-panel">
+                        <div class="admin-header">
+                            <h3 class="admin-title">模组管理</h3>
+                            <div class="admin-actions">
+                                <button class="admin-btn" id="addModBtn">添加新模组</button>
+                                <button class="admin-btn secondary" id="refreshModsBtn">刷新列表</button>
+                            </div>
+                        </div>
+
+                        <!-- 添加模组表单 -->
+                        <div class="mod-form" id="addModForm" style="display: none;">
+                            <h4>添加新模组</h4>
+                            <form id="modForm">
+                                <div class="mod-form-group">
+                                    <label for="modName">模组名称</label>
+                                    <input type="text" id="modName" placeholder="请输入模组名称" required>
+                                </div>
+                                <div class="mod-form-group">
+                                    <label for="modDescription">模组描述</label>
+                                    <textarea id="modDescription" placeholder="请输入模组描述" required></textarea>
+                                </div>
+                                <div class="mod-form-group">
+                                    <label for="modCategory">大类</label>
+                                    <select id="modCategory" required>
+                                        <option value="">请选择大类</option>
+                                        <option value="武器">武器</option>
+                                        <option value="服装">服装</option>
+                                        <option value="载具">载具</option>
+                                        <option value="建筑">建筑</option>
+                                        <option value="工具">工具</option>
+                                        <option value="功能">功能</option>
+                                    </select>
+                                </div>
+                                <div class="mod-form-group">
+                                    <label for="modModule">模块</label>
+                                    <select id="modModule" required>
+                                        <option value="">请先选择大类</option>
+                                    </select>
+                                </div>
+                                <div class="mod-form-group">
+                                    <label for="modAuthor">作者</label>
+                                    <input type="text" id="modAuthor" placeholder="请输入作者名称" required value="SKY">
+                                </div>
+                                <div class="mod-form-group">
+                                    <label for="modVersion">版本</label>
+                                    <input type="text" id="modVersion" placeholder="例如：1.0.0" required value="1.0.0">
+                                </div>
+                                <div class="mod-form-group">
+                                    <label for="modSize">文件大小</label>
+                                    <input type="text" id="modSize" placeholder="例如：2.5MB" required>
+                                </div>
+                                <div class="mod-form-group">
+                                    <label for="modImage">图片URL</label>
+                                    <input type="text" id="modImage" placeholder="请输入图片URL" required>
+                                </div>
+                                <div class="mod-form-group">
+                                    <label for="modFeatures">功能特性（每行一个）</label>
+                                    <textarea id="modFeatures" placeholder="请输入模组的功能特性，每行一个特性" rows="3"></textarea>
+                                </div>
+                                <div class="mod-form-group">
+                                    <label for="modScreenshots">截图URL（每行一个）</label>
+                                    <textarea id="modScreenshots" placeholder="请输入截图URL，每行一个URL" rows="3"></textarea>
+                                </div>
+                                <div class="mod-form-group">
+                                    <label for="modDownloadUrl">下载链接</label>
+                                    <input type="text" id="modDownloadUrl" placeholder="请输入模组下载链接">
+                                </div>
+                                <div class="mod-form-group">
+                                    <label for="modGameVersion">兼容游戏版本</label>
+                                    <input type="text" id="modGameVersion" placeholder="例如：DayZ 1.27+" value="DayZ 1.28">
+                                </div>
+                                <div class="mod-form-group">
+                                    <label for="modRequiredMods">依赖模组</label>
+                                    <input type="text" id="modRequiredMods" placeholder="例如：CF, Community Framework" value="无">
+                                </div>
+                                <div class="mod-form-group">
+                                    <label for="modServerSide">运行环境</label>
+                                    <select id="modServerSide">
+                                        <option value="客户端/服务端">客户端/服务端</option>
+                                        <option value="仅客户端">仅客户端</option>
+                                        <option value="仅服务端">仅服务端</option>
+                                    </select>
+                                </div>
+                                <div class="mod-form-group">
+                                    <label for="modFeatured">首页显示</label>
+                                    <select id="modFeatured">
+                                        <option value="false">不显示</option>
+                                        <option value="true">显示在首页</option>
+                                    </select>
+                                    <small style="color: #a0aec0;">最多可设置3个模组在首页显示</small>
+                                </div>
+                                <div class="mod-form-actions">
+                                    <button type="submit" class="admin-btn">保存模组</button>
+                                    <button type="button" class="admin-btn secondary" id="cancelModBtn">取消</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- 模组列表 -->
+                        <div class="mods-list" id="modsList">
+                            <h4>现有模组</h4>
+                            <div id="modsGrid" class="mods-grid">
+                                <!-- 模组将通过 JavaScript 动态加载 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 DayZ社区模组展示. 保留所有权利. <a href="legal.html">法律声明</a></p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // 管理员面板功能
+        class AdminPanel {
+            constructor() {
+                this.init();
+            }
+            
+            init() {
+                // 检查管理员权限
+                this.checkAdminAccess();
+                
+                // 绑定事件
+                this.bindEvents();
+                
+                // 加载模组列表
+                this.loadModsList();
+                
+                // 加载统计信息
+                this.loadStats();
+            }
+            
+            // 检查管理员权限
+            checkAdminAccess() {
+                const userData = localStorage.getItem('dayz_user');
+                if (userData) {
+                    const user = JSON.parse(userData);
+                    if (user.role === 'admin') {
+                        document.getElementById('adminPanel').style.display = 'block';
+                        document.getElementById('adminCheck').style.display = 'none';
+                    } else {
+                        document.getElementById('adminPanel').style.display = 'none';
+                        document.getElementById('adminCheck').style.display = 'block';
+                    }
+                } else {
+                    document.getElementById('adminPanel').style.display = 'none';
+                    document.getElementById('adminCheck').style.display = 'block';
+                }
+            }
+            
+            // 绑定事件
+            bindEvents() {
+                // 添加模组按钮
+                document.getElementById('addModBtn').addEventListener('click', () => {
+                    this.toggleModForm();
+                });
+                
+                // 取消按钮
+                document.getElementById('cancelModBtn').addEventListener('click', () => {
+                    this.toggleModForm(false);
+                });
+                
+                // 刷新按钮
+                document.getElementById('refreshModsBtn').addEventListener('click', () => {
+                    this.loadModsList();
+                    this.loadStats();
+                });
+                
+                // 刷新统计按钮
+                document.getElementById('refreshStatsBtn').addEventListener('click', () => {
+                    this.loadStats();
+                    this.showNotification('统计信息已刷新', 'success');
+                });
+                
+                // 刷新统计按钮
+                document.getElementById('refreshStatsBtn').addEventListener('click', () => {
+                    this.loadStats();
+                    this.showNotification('统计信息已刷新', 'success');
+                });
+                
+                // 模组表单提交
+                document.getElementById('modForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveMod();
+                });
+                
+                // 大类选择变化
+                document.getElementById('modCategory').addEventListener('change', (e) => {
+                    this.updateModuleOptions(e.target.value);
+                });
+            }
+            
+            // 切换模组表单显示
+            toggleModForm(show = true) {
+                const form = document.getElementById('addModForm');
+                form.style.display = show ? 'block' : 'none';
+            }
+            
+            // 更新模块选项
+            updateModuleOptions(category) {
+                const moduleSelect = document.getElementById('modModule');
+                moduleSelect.innerHTML = '<option value="">请选择模块</option>';
+                
+                const modules = this.getModulesForCategory(category);
+                modules.forEach(module => {
+                    const option = document.createElement('option');
+                    option.value = module;
+                    option.textContent = module;
+                    moduleSelect.appendChild(option);
+                });
+            }
+            
+            // 获取分类对应的模块列表
+            getModulesForCategory(category) {
+                const categoryModules = {
+                    '武器': ['枪械', '配件', '近身武器', '投掷武器'],
+                    '服装': ['套装', '头盔', '眼镜', '面具', '上衣', '防弹衣', '手套', '背包', '腰带', '裤子', '鞋子'],
+                    '载具': ['汽车', '摩托车', '直升机', '船只'],
+                    '建筑': ['房屋', '围栏', '门', '楼梯', '装饰'],
+                    '工具': ['修理工具', '医疗工具', '烹饪工具', '采集工具'],
+                    '功能': ['天气系统', '任务系统', '经济系统', 'AI系统', '特殊功能', '交互系统', '娱乐组件']
+                };
+                return categoryModules[category] || [];
+            }
+            
+            // 保存模组
+            saveMod() {
+                // 处理功能特性（将文本区域内容转换为数组）
+                const featuresText = document.getElementById('modFeatures').value.trim();
+                const features = featuresText ? featuresText.split('\n').filter(line => line.trim()) : [];
+                
+                // 处理截图URL（将文本区域内容转换为数组）
+                const screenshotsText = document.getElementById('modScreenshots').value.trim();
+                const screenshots = screenshotsText ? screenshotsText.split('\n').filter(line => line.trim()) : [];
+                
+                const modData = {
+                    id: Date.now().toString(),
+                    name: document.getElementById('modName').value.trim(),
+                    description: document.getElementById('modDescription').value.trim(),
+                    category: document.getElementById('modCategory').value,
+                    module: document.getElementById('modModule').value,
+                    version: document.getElementById('modVersion').value.trim(),
+                    size: document.getElementById('modSize').value.trim(),
+                    image: document.getElementById('modImage').value.trim(),
+                    downloadUrl: document.getElementById('modDownloadUrl').value.trim(),
+                    features: features,
+                    screenshots: screenshots,
+                    compatibility: {
+                        gameVersion: document.getElementById('modGameVersion').value.trim(),
+                        requiredMods: document.getElementById('modRequiredMods').value.trim(),
+                        serverSide: document.getElementById('modServerSide').value
+                    },
+                    featured: document.getElementById('modFeatured').value === 'true',
+                    createdAt: new Date().toISOString()
+                };
+                
+                // 验证数据
+                if (!this.validateModData(modData)) {
+                    return;
+                }
+                
+                // 保存到localStorage
+                const mods = JSON.parse(localStorage.getItem('dayz_mods_production') || '[]');
+                
+                // 检查是否为编辑模式
+                const editId = document.getElementById('modForm').dataset.editId;
+                if (editId) {
+                    // 更新现有模组
+                    const index = mods.findIndex(m => m.id === editId);
+                    if (index !== -1) {
+                        mods[index] = modData;
+                    }
+                    // 清除编辑标记
+                    delete document.getElementById('modForm').dataset.editId;
+                } else {
+                    // 添加新模组
+                    mods.push(modData);
+                }
+                
+                localStorage.setItem('dayz_mods_production', JSON.stringify(mods));
+                
+                // 触发更新事件
+                window.dispatchEvent(new CustomEvent('mods-updated'));
+                
+                // 重置表单
+                document.getElementById('modForm').reset();
+                
+                // 隐藏表单
+                this.toggleModForm(false);
+                
+                // 刷新列表
+                this.loadModsList();
+                this.loadStats();
+                
+                // 显示成功消息
+                this.showNotification('模组添加成功！', 'success');
+            }
+            
+            // 验证模组数据
+            validateModData(modData) {
+                if (!modData.name) {
+                    this.showNotification('请输入模组名称', 'error');
+                    return false;
+                }
+                
+                if (!modData.description) {
+                    this.showNotification('请输入模组描述', 'error');
+                    return false;
+                }
+                
+                if (!modData.category) {
+                    this.showNotification('请选择大类', 'error');
+                    return false;
+                }
+                
+                if (!modData.module) {
+                    this.showNotification('请选择模块', 'error');
+                    return false;
+                }
+                
+                return true;
+            }
+            
+            // 加载模组列表
+            loadModsList() {
+                const mods = JSON.parse(localStorage.getItem('dayz_mods_production') || '[]');
+                const modsGrid = document.getElementById('modsGrid');
+                
+                modsGrid.innerHTML = '';
+                
+                if (mods.length === 0) {
+                    modsGrid.innerHTML = '<p style="text-align: center; color: #a0aec0;">暂无模组数据</p>';
+                    return;
+                }
+                
+                mods.forEach(mod => {
+                    const modElement = this.createModElement(mod);
+                    modsGrid.appendChild(modElement);
+                });
+            }
+            
+            // 创建模组元素
+            createModElement(mod) {
+                const div = document.createElement('div');
+                div.className = 'mod-item';
+                div.innerHTML = `
+                    <div class="mod-image">
+                        <img src="${mod.image}" alt="${mod.name}" class="zoomable-image">
+                        <div class="mod-category">${mod.category}</div>
+                    </div>
+                    <div class="mod-info">
+                        <h3>${mod.name}</h3>
+                        <p class="mod-description">${mod.description}</p>
+                        <div class="mod-stats">
+                            <span class="mod-version">${mod.version}</span>
+                            <span class="mod-size">${mod.size}</span>
+                        </div>
+                        <div class="mod-actions">
+                            <button class="admin-btn secondary" onclick="adminPanel.editMod('${mod.id}')">编辑</button>
+                            <button class="admin-btn" onclick="adminPanel.deleteMod('${mod.id}')" style="background: #e53e3e;">删除</button>
+                        </div>
+                    </div>
+                `;
+                return div;
+            }
+            
+            // 编辑模组
+            editMod(modId) {
+                const mods = JSON.parse(localStorage.getItem('dayz_mods_production') || '[]');
+                const mod = mods.find(m => m.id === modId);
+                
+                if (mod) {
+                    // 填充表单数据
+                    document.getElementById('modName').value = mod.name;
+                    document.getElementById('modDescription').value = mod.description;
+                    document.getElementById('modCategory').value = mod.category;
+                    this.updateModuleOptions(mod.category);
+                    setTimeout(() => {
+                        document.getElementById('modModule').value = mod.module;
+                    }, 100);
+                    document.getElementById('modVersion').value = mod.version;
+                    document.getElementById('modSize').value = mod.size;
+                    document.getElementById('modImage').value = mod.image;
+                    
+                    // 填充新增字段
+                    document.getElementById('modDownloadUrl').value = mod.downloadUrl || '';
+                    document.getElementById('modFeatures').value = mod.features ? mod.features.join('\n') : '';
+                    document.getElementById('modScreenshots').value = mod.screenshots ? mod.screenshots.join('\n') : '';
+                    document.getElementById('modGameVersion').value = mod.compatibility?.gameVersion || 'DayZ 1.23+';
+                    document.getElementById('modRequiredMods').value = mod.compatibility?.requiredMods || '无';
+                    document.getElementById('modServerSide').value = mod.compatibility?.serverSide || '客户端/服务端';
+                    document.getElementById('modFeatured').value = mod.featured || false;
+                    
+                    // 显示表单
+                    this.toggleModForm(true);
+                    
+                    // 标记为编辑模式
+                    document.getElementById('modForm').dataset.editId = modId;
+                }
+            }
+            
+            // 删除模组
+            deleteMod(modId) {
+                if (confirm('确定要删除这个模组吗？此操作不可恢复。')) {
+                    const mods = JSON.parse(localStorage.getItem('dayz_mods_production') || '[]');
+                    const filteredMods = mods.filter(m => m.id !== modId);
+                    localStorage.setItem('dayz_mods_production', JSON.stringify(filteredMods));
+                    
+                    // 触发更新事件
+                    window.dispatchEvent(new CustomEvent('mods-updated'));
+                    
+                    this.loadModsList();
+                    this.loadStats();
+                    this.showNotification('模组删除成功！', 'success');
+                }
+            }
+            
+            // 加载统计信息
+            loadStats() {
+                try {
+                    console.log('开始加载统计信息...');
+                    
+                    // 确保数据初始化
+                    if (typeof initPresetUsers === 'function') {
+                        initPresetUsers();
+                    }
+                    
+                    // 获取模组数据
+                    const modsData = localStorage.getItem('dayz_mods_production');
+                    console.log('模组数据:', modsData);
+                    const mods = modsData ? JSON.parse(modsData) : [];
+                    
+                    // 获取用户数据
+                    const usersData = localStorage.getItem('dayz_users');
+                    console.log('用户数据:', usersData);
+                    const allUsers = usersData ? JSON.parse(usersData) : [];
+                    
+                    // 计算分类数量
+                    const categories = new Set();
+                    const featuredMods = mods.filter(mod => mod.featured === true);
+                    
+                    mods.forEach(mod => {
+                        if (mod.category) {
+                            categories.add(mod.category);
+                        }
+                    });
+                    
+                    // 更新统计显示 - 确保元素存在
+                    const totalModsEl = document.getElementById('totalMods');
+                    const totalCategoriesEl = document.getElementById('totalCategories');
+                    const totalUsersEl = document.getElementById('totalUsers');
+                    const featuredModsEl = document.getElementById('featuredMods');
+                    
+                    console.log('找到的元素:', {
+                        totalModsEl: !!totalModsEl,
+                        totalCategoriesEl: !!totalCategoriesEl,
+                        totalUsersEl: !!totalUsersEl,
+                        featuredModsEl: !!featuredModsEl
+                    });
+                    
+                    if (totalModsEl) {
+                        totalModsEl.textContent = mods.length;
+                        console.log('设置总模组数:', mods.length);
+                    }
+                    if (totalCategoriesEl) {
+                        totalCategoriesEl.textContent = categories.size;
+                        console.log('设置分类数量:', categories.size);
+                    }
+                    if (totalUsersEl) {
+                        totalUsersEl.textContent = allUsers.length;
+                        console.log('设置用户数量:', allUsers.length);
+                    }
+                    if (featuredModsEl) {
+                        featuredModsEl.textContent = featuredMods.length;
+                        console.log('设置推荐模组数:', featuredMods.length);
+                    }
+                    
+                    // 生成分类图表
+                    this.generateCategoryChart(mods);
+                    
+                    // 生成最近活动
+                    this.generateRecentActivity(mods);
+                    
+                    console.log('统计信息加载成功:', {
+                        mods: mods.length,
+                        categories: categories.size,
+                        users: allUsers.length,
+                        featured: featuredMods.length
+                    });
+                } catch (error) {
+                    console.error('加载统计信息失败:', error);
+                    // 设置默认值 - 确保元素存在
+                    const totalModsEl = document.getElementById('totalMods');
+                    const totalCategoriesEl = document.getElementById('totalCategories');
+                    const totalUsersEl = document.getElementById('totalUsers');
+                    const featuredModsEl = document.getElementById('featuredMods');
+                    
+                    console.log('错误处理 - 找到的元素:', {
+                        totalModsEl: !!totalModsEl,
+                        totalCategoriesEl: !!totalCategoriesEl,
+                        totalUsersEl: !!totalUsersEl,
+                        featuredModsEl: !!featuredModsEl
+                    });
+                    
+                    if (totalModsEl) totalModsEl.textContent = '0';
+                    if (totalCategoriesEl) totalCategoriesEl.textContent = '0';
+                    if (totalUsersEl) totalUsersEl.textContent = '0';
+                    if (featuredModsEl) featuredModsEl.textContent = '0';
+                    
+                    // 显示错误信息
+                    const categoryChart = document.getElementById('categoryChart');
+                    const recentActivity = document.getElementById('recentActivity');
+                    
+                    if (categoryChart) categoryChart.innerHTML = '<p style="color: #a0aec0; text-align: center;">数据加载失败</p>';
+                    if (recentActivity) recentActivity.innerHTML = '<p style="color: #a0aec0; text-align: center;">数据加载失败</p>';
+                }
+            }
+            
+            // 生成分类图表
+            generateCategoryChart(mods) {
+                const categoryChart = document.getElementById('categoryChart');
+                
+                // 统计每个分类的模组数量
+                const categoryCounts = {};
+                mods.forEach(mod => {
+                    if (mod.category) {
+                        categoryCounts[mod.category] = (categoryCounts[mod.category] || 0) + 1;
+                    }
+                });
+                
+                if (Object.keys(categoryCounts).length === 0) {
+                    categoryChart.innerHTML = '<p style="color: #a0aec0; text-align: center;">暂无分类数据</p>';
+                    return;
+                }
+                
+                let chartHTML = '<div class="category-chart-container">';
+                
+                Object.entries(categoryCounts).forEach(([category, count]) => {
+                    const percentage = (count / mods.length * 100).toFixed(1);
+                    chartHTML += `
+                        <div class="category-item">
+                            <div class="category-label">${category}</div>
+                            <div class="category-value">${count}</div>
+                            <div class="category-percentage">${percentage}%</div>
+                        </div>
+                    `;
+                });
+                
+                chartHTML += '</div>';
+                categoryChart.innerHTML = chartHTML;
+            }
+            
+            // 生成最近活动 - 下拉列表显示
+            generateRecentActivity(mods) {
+                const recentActivity = document.getElementById('recentActivity');
+                
+                // 按创建时间排序，取最近10个
+                const recentMods = mods
+                    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                    .slice(0, 10);
+                
+                if (recentMods.length === 0) {
+                    recentActivity.innerHTML = '<p style="color: #a0aec0; text-align: center;">暂无活动记录</p>';
+                    return;
+                }
+                
+                let activityHTML = '<select class="activity-select" size="5">';
+                
+                recentMods.forEach(mod => {
+                    const date = new Date(mod.createdAt).toLocaleDateString('zh-CN');
+                    const time = new Date(mod.createdAt).toLocaleTimeString('zh-CN', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+                    activityHTML += `
+                        <option value="${mod.id}" class="activity-option">
+                            📦 ${mod.name} - ${mod.category} (${date} ${time})
+                        </option>
+                    `;
+                });
+                
+                activityHTML += '</select>';
+                recentActivity.innerHTML = activityHTML;
+            }
+            
+            // 显示通知
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.textContent = message;
+                
+                const colors = {
+                    success: '#48bb78',
+                    error: '#e53e3e',
+                    info: '#63b3ed'
+                };
+                
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: ${colors[type] || colors.info};
+                    color: white;
+                    padding: 1rem 2rem;
+                    border-radius: 5px;
+                    z-index: 10000;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                    animation: slideIn 0.3s ease;
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.animation = 'slideOut 0.3s ease';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+        }
+        
+        // 初始化用户认证管理器
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化预设用户数据
+            if (typeof initPresetUsers === 'function') {
+                initPresetUsers();
+            }
+            new UserAuthManager();
+        });
+        
+        // 初始化管理员面板
+        const adminPanel = new AdminPanel();
+    </script>
+</body>
+</html>

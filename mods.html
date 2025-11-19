@@ -26,7 +26,13 @@
                 <li class="nav-item">
                     <a href="legal.html" class="nav-link">法律声明</a>
                 </li>
+                <li class="nav-item" id="adminNavItem" style="display: none;">
+                    <a href="admin.html" class="nav-link">管理员面板</a>
+                </li>
             </ul>
+            <div class="user-auth" id="userAuthContainer">
+                <!-- 动态内容将由JavaScript填充 -->
+            </div>
             <div class="nav-toggle">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -39,72 +45,161 @@
     <main class="main-content">
         <section class="page-content">
             <div class="container">
-                <div class="page-header">
-                    <h2>DayZ社区模组展示库</h2>
-                    <p>探索我们精心挑选的优质DayZ社区模组，提升你的游戏体验</p>
-                </div>
-
-                <!-- 搜索和筛选区域 -->
-                <div class="search-filter">
-                    <div class="search-box">
-                        <input type="text" id="modSearch" placeholder="搜索模组名称或描述..." class="search-input">
-                    </div>
-                    <div class="filter-panel">
-                        <div class="filter-row">
-                            <span class="filter-label">大类：</span>
-                            <button class="filter-btn">全部</button>
-                            <button class="filter-btn">武器</button>
-                            <button class="filter-btn">服装</button>
-                            <button class="filter-btn">载具</button>
-                            <button class="filter-btn">建筑</button>
-                            <button class="filter-btn">工具</button>
-                            <button class="filter-btn">功能</button>
+                <!-- 美化后的搜索和筛选区域 -->
+                <div class="search-filter-section">
+                    <div class="search-container">
+                        <div class="search-box-enhanced">
+                            <input type="text" id="modSearch" placeholder="搜索模组名称、描述或关键词..." class="search-input-enhanced">
+                            <div class="search-actions">
+                                <button class="search-clear" id="searchClear" style="display: none;">✕</button>
+                            </div>
                         </div>
-                        <div class="filter-row">
-                            <span class="filter-label">模块：</span>
-                            <button class="filter-btn">全部</button>
-                            <button class="filter-btn">枪械</button>
-                            <button class="filter-btn">配件</button>
-                            <button class="filter-btn">近身武器</button>
-                            <button class="filter-btn">投掷武器</button>
-                            <button class="filter-btn">套装</button>
-                            <button class="filter-btn">头盔</button>
-                            <button class="filter-btn">眼镜</button>
-                            <button class="filter-btn">面具</button>
-                            <button class="filter-btn">上衣</button>
-                            <button class="filter-btn">防弹衣</button>
-                            <button class="filter-btn">手套</button>
-                            <button class="filter-btn">背包</button>
-                            <button class="filter-btn">腰带</button>
-                            <button class="filter-btn">裤子</button>
-                            <button class="filter-btn">鞋子</button>
-                            <button class="filter-btn">汽车</button>
-                            <button class="filter-btn">摩托车</button>
-                            <button class="filter-btn">直升机</button>
-                            <button class="filter-btn">船只</button>
-                            <button class="filter-btn">房屋</button>
-                            <button class="filter-btn">围栏</button>
-                            <button class="filter-btn">门</button>
-                            <button class="filter-btn">楼梯</button>
-                            <button class="filter-btn">装饰</button>
-                            <button class="filter-btn">修理工具</button>
-                            <button class="filter-btn">医疗工具</button>
-                            <button class="filter-btn">烹饪工具</button>
-                            <button class="filter-btn">采集工具</button>
-                            <button class="filter-btn">天气系统</button>
-                            <button class="filter-btn">任务系统</button>
-                            <button class="filter-btn">经济系统</button>
-                            <button class="filter-btn">AI系统</button>
-                            <button class="filter-btn">特殊功能</button>
-                            <button class="filter-btn">交互系统</button>
-                            <button class="filter-btn">娱乐组件</button>
+                        <div class="search-tips">
+                            <span class="tip-item">💡 支持模糊搜索</span>
+                            <span class="tip-item">⚡ 实时筛选</span>
+                            <span class="tip-item">🎯 智能匹配</span>
                         </div>
                     </div>
+                    
+                    <!-- 专业级筛选面板 -->
+                    <div class="filter-panel-enhanced">
+                        <div class="filter-header">
+                            <h3 class="filter-title">
+                                <span class="filter-icon">🎛️</span>
+                                智能筛选
+                            </h3>
+                            <div class="filter-actions">
+                                <button class="filter-reset" id="filterReset">重置筛选</button>
+                                <span class="filter-count" id="filterCount">0 个模组</span>
+                            </div>
+                        </div>
+                        
+                        <div class="filter-content">
+                            <!-- 分类筛选 -->
+                            <div class="filter-group">
+                                <div class="filter-group-header">
+                                    <span class="group-icon">📁</span>
+                                    <span class="group-title">模组分类</span>
+                                    <span class="group-count" id="categoryCount">7</span>
+                                </div>
+                                <div class="filter-buttons-grid">
+                                    <button class="filter-btn-enhanced active" data-category="全部">
+                                        <span class="btn-icon">🌐</span>
+                                        <span class="btn-text">全部</span>
+                                        
+                                    </button>
+                                    <button class="filter-btn-enhanced" data-category="武器">
+                                        <span class="btn-icon">🔫</span>
+                                        <span class="btn-text">武器</span>
+                                        
+                                    </button>
+                                    <button class="filter-btn-enhanced" data-category="服装">
+                                        <span class="btn-icon">👕</span>
+                                        <span class="btn-text">服装</span>
+                                        
+                                    </button>
+                                    <button class="filter-btn-enhanced" data-category="载具">
+                                        <span class="btn-icon">🚗</span>
+                                        <span class="btn-text">载具</span>
+                                        
+                                    </button>
+                                    <button class="filter-btn-enhanced" data-category="建筑">
+                                        <span class="btn-icon">🏠</span>
+                                        <span class="btn-text">建筑</span>
+                                        
+                                    </button>
+                                    <button class="filter-btn-enhanced" data-category="工具">
+                                        <span class="btn-icon">🔧</span>
+                                        <span class="btn-text">工具</span>
+                                        
+                                    </button>
+                                    <button class="filter-btn-enhanced" data-category="功能">
+                                        <span class="btn-icon">⚙️</span>
+                                        <span class="btn-text">功能</span>
+                                        
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- 模块筛选 -->
+                            <div class="filter-group">
+                                <div class="filter-group-header">
+                                    <span class="group-icon">📦</span>
+                                    <span class="group-title">模块类型</span>
+                                    <span class="group-count" id="moduleCount">32</span>
+                                </div>
+                                <div class="filter-buttons-grid module-buttons">
+                                    <button class="filter-btn-enhanced active" data-module="全部">
+                                        <span class="btn-icon">📋</span>
+                                        <span class="btn-text">全部模块</span>
+                                    </button>
+                                    <!-- 模块按钮将通过JavaScript动态生成 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- 模组列表 -->
-                <div class="mods-grid">
-                    <!-- 动态渲染模组项 -->
+                <!-- 美化后的模组列表区域 -->
+                <div class="mods-section">
+                    <div class="section-header">
+                        <div class="section-title-container">
+                            <div class="section-controls">
+                                <div class="view-toggle">
+                                    <button class="view-btn active" data-view="grid">
+                                        <span class="view-icon">⏹️</span>
+                                        网格视图
+                                    </button>
+                                    <button class="view-btn" data-view="list">
+                                        <span class="view-icon">📋</span>
+                                        列表视图
+                                    </button>
+                                </div>
+                                <div class="sort-controls">
+                                    <select class="sort-select" id="sortSelect">
+                                        <option value="name">按名称排序</option>
+                                        <option value="date">按日期排序</option>
+                                        <option value="popularity">按热度排序</option>
+                                        <option value="size">按大小排序</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 模组列表容器 -->
+                    <div class="mods-container">
+                        <div class="mods-grid-enhanced" id="modsGrid">
+                            <!-- 动态渲染模组项 -->
+                        </div>
+                        
+                        <!-- 空状态提示 -->
+                        <div class="empty-state" id="emptyState" style="display: none;">
+                            <div class="empty-icon">📭</div>
+                            <h3 class="empty-title">暂无模组</h3>
+                            <p class="empty-description">当前筛选条件下没有找到模组，请尝试其他分类或搜索关键词</p>
+                            <button class="empty-action" id="resetFilters">重置所有筛选</button>
+                        </div>
+                        
+                        <!-- 加载状态 -->
+                        <div class="loading-state" id="loadingState" style="display: none;">
+                            <div class="loading-spinner"></div>
+                            <p class="loading-text">正在加载模组数据...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 分页控件 -->
+                    <div class="pagination" id="pagination" style="display: none;">
+                        <button class="page-btn prev" id="prevPage">
+                            <span class="page-icon">◀</span>
+                            上一页
+                        </button>
+                        <div class="page-numbers" id="pageNumbers"></div>
+                        <button class="page-btn next" id="nextPage">
+                            下一页
+                            <span class="page-icon">▶</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -117,6 +212,29 @@
         </div>
     </footer>
 
+    <!-- 确保脚本按正确顺序加载 -->
     <script src="script.js"></script>
+    <script>
+        // 调试信息
+        console.log('页面加载完成，开始初始化数据');
+        
+        // 创建实时更新监听器（放在DOMContentLoaded外部，确保每次加载都能监听）
+        window.addEventListener('mods-updated', function() {
+            console.log('收到模组更新事件，刷新页面');
+            location.reload();
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded 事件触发');
+            initPresetMods();
+            initPresetUsers();
+            
+            // 初始化用户认证管理器
+            new UserAuthManager();
+            
+            // 启动应用
+            new ModsApp();
+        });
+    </script>
 </body>
 </html>
