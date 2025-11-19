@@ -1,6 +1,6 @@
 [
   {
-    "id": "1763555475322",
+    "id": "1763555784371",
     "name": "持续上新",
     "description": "持续上新",
     "category": "武器",
@@ -16,11 +16,11 @@
       "requiredMods": "无",
       "serverSide": "客户端/服务端"
     },
-    "featured": false,
-    "createdAt": "2025-11-19T12:31:15.322Z"
+    "featured": true,
+    "createdAt": "2025-11-19T12:36:24.371Z"
   },
   {
-    "id": "1763554663578",
+    "id": "1763560669877",
     "name": "sky_weapons_aug01",
     "description": "AUG",
     "category": "武器",
@@ -34,7 +34,8 @@
     ],
     "screenshots": [
       "images\\weapon1\\sky_weapons_aug01\\01.png",
-      "images\\weapon1\\sky_weapons_aug01\\02.png"
+      "images\\weapon1\\sky_weapons_aug01\\02.png",
+      "images\\weapon1\\sky_weapons_aug01\\03.png"
     ],
     "compatibility": {
       "gameVersion": "DayZ 1.28",
@@ -42,6 +43,32 @@
       "serverSide": "客户端/服务端"
     },
     "featured": true,
-    "createdAt": "2025-11-19T12:17:43.578Z"
+    "createdAt": "2025-11-19T13:57:49.877Z"
+  },
+  {
+    "id": "1763560661875",
+    "name": "Sky_shotguns_Fan_Art",
+    "description": "异形霰弹枪",
+    "category": "武器",
+    "module": "枪械",
+    "version": "1.0.0",
+    "size": "8.6MB",
+    "image": "images\\weapon1\\Sky_shotguns_Fan_Art\\00.png",
+    "downloadUrl": "",
+    "features": [
+      "子弹 高伤害 无后座力 无下坠"
+    ],
+    "screenshots": [
+      "images\\weapon1\\Sky_shotguns_Fan_Art\\01.png",
+      "images\\weapon1\\Sky_shotguns_Fan_Art\\02.png",
+      "images\\weapon1\\Sky_shotguns_Fan_Art\\03.png"
+    ],
+    "compatibility": {
+      "gameVersion": "DayZ 1.28",
+      "requiredMods": "无",
+      "serverSide": "客户端/服务端"
+    },
+    "featured": false,
+    "createdAt": "2025-11-19T13:57:41.875Z"
   }
 ]
