@@ -119,6 +119,7 @@
                             <div class="admin-actions">
                                 <button class="admin-btn" id="addModBtn">添加新模组</button>
                                 <button class="admin-btn secondary" id="refreshModsBtn">刷新列表</button>
+                                <button class="admin-btn success" id="batchDownloadBtn">更新下载JSON</button>
                             </div>
                         </div>
 
@@ -311,6 +312,16 @@
                 document.getElementById('modCategory').addEventListener('change', (e) => {
                     this.updateModuleOptions(e.target.value);
                 });
+                
+                // 批量下载按钮
+                document.getElementById('batchDownloadBtn').addEventListener('click', () => {
+                    this.batchDownloadJson();
+                });
+                
+                // 批量下载按钮
+                document.getElementById('batchDownloadBtn').addEventListener('click', () => {
+                    this.batchDownloadJson();
+                });
             }
             
             // 切换模组表单显示
@@ -382,41 +393,66 @@
                     return;
                 }
                 
-                // 保存到localStorage
-                const mods = JSON.parse(localStorage.getItem('dayz_mods_production') || '[]');
+                // 从JSON文件或localStorage加载现有模组数据
+                this.loadModsData()
+                    .then(mods => {
+                        // 检查是否为编辑模式
+                        const editId = document.getElementById('modForm').dataset.editId;
+                        if (editId) {
+                            // 更新现有模组
+                            const index = mods.findIndex(m => m.id === editId);
+                            if (index !== -1) {
+                                mods[index] = modData;
+                            }
+                            // 清除编辑标记
+                            delete document.getElementById('modForm').dataset.editId;
+                        } else {
+                            // 添加新模组
+                            mods.push(modData);
+                        }
+                        
+                        // 保存到localStorage（不再立即下载JSON文件）
+                        localStorage.setItem('dayz_mods_production', JSON.stringify(mods));
+                        
+                        // 重置表单
+                        document.getElementById('modForm').reset();
+                        
+                        // 隐藏表单
+                        this.toggleModForm(false);
+                        
+                        // 刷新列表
+                        this.loadModsList();
+                        this.loadStats();
+                        
+                        // 显示成功消息
+                        this.showNotification('模组保存成功！请使用"批量下载JSON"按钮导出所有数据', 'success');
+                        
+                        // 触发更新事件
+                        window.dispatchEvent(new CustomEvent('mods-updated'));
+                    })
+                    .catch(error => {
+                        console.error('加载模组数据失败:', error);
+                        this.showNotification('加载模组数据失败，请检查网络连接', 'error');
+                    });
+            }
+            
+            // 保存数据到JSON文件（模拟下载）
+            saveToJsonFile(mods) {
+                const dataStr = JSON.stringify(mods, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
                 
-                // 检查是否为编辑模式
-                const editId = document.getElementById('modForm').dataset.editId;
-                if (editId) {
-                    // 更新现有模组
-                    const index = mods.findIndex(m => m.id === editId);
-                    if (index !== -1) {
-                        mods[index] = modData;
-                    }
-                    // 清除编辑标记
-                    delete document.getElementById('modForm').dataset.editId;
-                } else {
-                    // 添加新模组
-                    mods.push(modData);
-                }
+                // 创建下载链接
+                const downloadLink = document.createElement('a');
+                downloadLink.download = 'mods.json';
+                downloadLink.href = window.URL.createObjectURL(dataBlob);
+                downloadLink.style.display = 'none';
                 
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                
+                // 同时保存到localStorage作为备份
                 localStorage.setItem('dayz_mods_production', JSON.stringify(mods));
-                
-                // 触发更新事件
-                window.dispatchEvent(new CustomEvent('mods-updated'));
-                
-                // 重置表单
-                document.getElementById('modForm').reset();
-                
-                // 隐藏表单
-                this.toggleModForm(false);
-                
-                // 刷新列表
-                this.loadModsList();
-                this.loadStats();
-                
-                // 显示成功消息
-                this.showNotification('模组添加成功！', 'success');
             }
             
             // 验证模组数据
@@ -446,9 +482,31 @@
             
             // 加载模组列表
             loadModsList() {
-                const mods = JSON.parse(localStorage.getItem('dayz_mods_production') || '[]');
+                // 尝试从JSON文件加载数据
+                fetch('data/mods.json')
+                    .then(response => response.json())
+                    .then(mods => {
+                        this.displayModsList(mods);
+                        // 同时更新localStorage作为备份
+                        localStorage.setItem('dayz_mods_production', JSON.stringify(mods));
+                    })
+                    .catch(error => {
+                        console.log('JSON文件加载失败，尝试从localStorage加载:', error);
+                        // 从localStorage加载备份数据
+                        const backupMods = localStorage.getItem('dayz_mods_production');
+                        if (backupMods) {
+                            const mods = JSON.parse(backupMods);
+                            this.displayModsList(mods);
+                        } else {
+                            const modsGrid = document.getElementById('modsGrid');
+                            modsGrid.innerHTML = '<p style="text-align: center; color: #a0aec0;">暂无模组数据，请先添加模组</p>';
+                        }
+                    });
+            }
+            
+            // 显示模组列表
+            displayModsList(mods) {
                 const modsGrid = document.getElementById('modsGrid');
-                
                 modsGrid.innerHTML = '';
                 
                 if (mods.length === 0) {
@@ -489,52 +547,66 @@
             
             // 编辑模组
             editMod(modId) {
-                const mods = JSON.parse(localStorage.getItem('dayz_mods_production') || '[]');
-                const mod = mods.find(m => m.id === modId);
-                
-                if (mod) {
-                    // 填充表单数据
-                    document.getElementById('modName').value = mod.name;
-                    document.getElementById('modDescription').value = mod.description;
-                    document.getElementById('modCategory').value = mod.category;
-                    this.updateModuleOptions(mod.category);
-                    setTimeout(() => {
-                        document.getElementById('modModule').value = mod.module;
-                    }, 100);
-                    document.getElementById('modVersion').value = mod.version;
-                    document.getElementById('modSize').value = mod.size;
-                    document.getElementById('modImage').value = mod.image;
-                    
-                    // 填充新增字段
-                    document.getElementById('modDownloadUrl').value = mod.downloadUrl || '';
-                    document.getElementById('modFeatures').value = mod.features ? mod.features.join('\n') : '';
-                    document.getElementById('modScreenshots').value = mod.screenshots ? mod.screenshots.join('\n') : '';
-                    document.getElementById('modGameVersion').value = mod.compatibility?.gameVersion || 'DayZ 1.23+';
-                    document.getElementById('modRequiredMods').value = mod.compatibility?.requiredMods || '无';
-                    document.getElementById('modServerSide').value = mod.compatibility?.serverSide || '客户端/服务端';
-                    document.getElementById('modFeatured').value = mod.featured || false;
-                    
-                    // 显示表单
-                    this.toggleModForm(true);
-                    
-                    // 标记为编辑模式
-                    document.getElementById('modForm').dataset.editId = modId;
-                }
+                this.loadModsData()
+                    .then(mods => {
+                        const mod = mods.find(m => m.id === modId);
+                        
+                        if (mod) {
+                            // 填充表单数据
+                            document.getElementById('modName').value = mod.name;
+                            document.getElementById('modDescription').value = mod.description;
+                            document.getElementById('modCategory').value = mod.category;
+                            this.updateModuleOptions(mod.category);
+                            setTimeout(() => {
+                                document.getElementById('modModule').value = mod.module;
+                            }, 100);
+                            document.getElementById('modVersion').value = mod.version;
+                            document.getElementById('modSize').value = mod.size;
+                            document.getElementById('modImage').value = mod.image;
+                            
+                            // 填充新增字段
+                            document.getElementById('modDownloadUrl').value = mod.downloadUrl || '';
+                            document.getElementById('modFeatures').value = mod.features ? mod.features.join('\n') : '';
+                            document.getElementById('modScreenshots').value = mod.screenshots ? mod.screenshots.join('\n') : '';
+                            document.getElementById('modGameVersion').value = mod.compatibility?.gameVersion || 'DayZ 1.23+';
+                            document.getElementById('modRequiredMods').value = mod.compatibility?.requiredMods || '无';
+                            document.getElementById('modServerSide').value = mod.compatibility?.serverSide || '客户端/服务端';
+                            document.getElementById('modFeatured').value = mod.featured || false;
+                            
+                            // 显示表单
+                            this.toggleModForm(true);
+                            
+                            // 标记为编辑模式
+                            document.getElementById('modForm').dataset.editId = modId;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('加载模组数据失败:', error);
+                        this.showNotification('加载模组数据失败，无法编辑模组', 'error');
+                    });
             }
             
             // 删除模组
             deleteMod(modId) {
                 if (confirm('确定要删除这个模组吗？此操作不可恢复。')) {
-                    const mods = JSON.parse(localStorage.getItem('dayz_mods_production') || '[]');
-                    const filteredMods = mods.filter(m => m.id !== modId);
-                    localStorage.setItem('dayz_mods_production', JSON.stringify(filteredMods));
-                    
-                    // 触发更新事件
-                    window.dispatchEvent(new CustomEvent('mods-updated'));
-                    
-                    this.loadModsList();
-                    this.loadStats();
-                    this.showNotification('模组删除成功！', 'success');
+                    this.loadModsData()
+                        .then(mods => {
+                            const filteredMods = mods.filter(m => m.id !== modId);
+                            
+                            // 保存到localStorage（不再立即下载JSON文件）
+                            localStorage.setItem('dayz_mods_production', JSON.stringify(filteredMods));
+                            
+                            // 触发更新事件
+                            window.dispatchEvent(new CustomEvent('mods-updated'));
+                            
+                            this.loadModsList();
+                            this.loadStats();
+                            this.showNotification('模组删除成功！请使用"批量下载JSON"按钮导出所有数据', 'success');
+                        })
+                        .catch(error => {
+                            console.error('加载模组数据失败:', error);
+                            this.showNotification('加载模组数据失败，无法删除模组', 'error');
+                        });
                 }
             }
             
@@ -548,95 +620,128 @@
                         initPresetUsers();
                     }
                     
-                    // 获取模组数据
-                    const modsData = localStorage.getItem('dayz_mods_production');
-                    console.log('模组数据:', modsData);
-                    const mods = modsData ? JSON.parse(modsData) : [];
-                    
-                    // 获取用户数据
-                    const usersData = localStorage.getItem('dayz_users');
-                    console.log('用户数据:', usersData);
-                    const allUsers = usersData ? JSON.parse(usersData) : [];
-                    
-                    // 计算分类数量
-                    const categories = new Set();
-                    const featuredMods = mods.filter(mod => mod.featured === true);
-                    
-                    mods.forEach(mod => {
-                        if (mod.category) {
-                            categories.add(mod.category);
-                        }
-                    });
-                    
-                    // 更新统计显示 - 确保元素存在
-                    const totalModsEl = document.getElementById('totalMods');
-                    const totalCategoriesEl = document.getElementById('totalCategories');
-                    const totalUsersEl = document.getElementById('totalUsers');
-                    const featuredModsEl = document.getElementById('featuredMods');
-                    
-                    console.log('找到的元素:', {
-                        totalModsEl: !!totalModsEl,
-                        totalCategoriesEl: !!totalCategoriesEl,
-                        totalUsersEl: !!totalUsersEl,
-                        featuredModsEl: !!featuredModsEl
-                    });
-                    
-                    if (totalModsEl) {
-                        totalModsEl.textContent = mods.length;
-                        console.log('设置总模组数:', mods.length);
-                    }
-                    if (totalCategoriesEl) {
-                        totalCategoriesEl.textContent = categories.size;
-                        console.log('设置分类数量:', categories.size);
-                    }
-                    if (totalUsersEl) {
-                        totalUsersEl.textContent = allUsers.length;
-                        console.log('设置用户数量:', allUsers.length);
-                    }
-                    if (featuredModsEl) {
-                        featuredModsEl.textContent = featuredMods.length;
-                        console.log('设置推荐模组数:', featuredMods.length);
-                    }
-                    
-                    // 生成分类图表
-                    this.generateCategoryChart(mods);
-                    
-                    // 生成最近活动
-                    this.generateRecentActivity(mods);
-                    
-                    console.log('统计信息加载成功:', {
-                        mods: mods.length,
-                        categories: categories.size,
-                        users: allUsers.length,
-                        featured: featuredMods.length
-                    });
+                    // 从JSON文件获取模组数据，失败时使用localStorage备份
+                    this.loadModsData()
+                        .then(mods => {
+                            console.log('模组数据:', mods);
+                            
+                            // 获取用户数据
+                            const usersData = localStorage.getItem('dayz_users');
+                            console.log('用户数据:', usersData);
+                            const allUsers = usersData ? JSON.parse(usersData) : [];
+                            
+                            // 计算分类数量
+                            const categories = new Set();
+                            const featuredMods = mods.filter(mod => mod.featured === true);
+                            
+                            mods.forEach(mod => {
+                                if (mod.category) {
+                                    categories.add(mod.category);
+                                }
+                            });
+                            
+                            // 更新统计显示 - 确保元素存在
+                            const totalModsEl = document.getElementById('totalMods');
+                            const totalCategoriesEl = document.getElementById('totalCategories');
+                            const totalUsersEl = document.getElementById('totalUsers');
+                            const featuredModsEl = document.getElementById('featuredMods');
+                            
+                            console.log('找到的元素:', {
+                                totalModsEl: !!totalModsEl,
+                                totalCategoriesEl: !!totalCategoriesEl,
+                                totalUsersEl: !!totalUsersEl,
+                                featuredModsEl: !!featuredModsEl
+                            });
+                            
+                            if (totalModsEl) {
+                                totalModsEl.textContent = mods.length;
+                                console.log('设置总模组数:', mods.length);
+                            }
+                            if (totalCategoriesEl) {
+                                totalCategoriesEl.textContent = categories.size;
+                                console.log('设置分类数量:', categories.size);
+                            }
+                            if (totalUsersEl) {
+                                totalUsersEl.textContent = allUsers.length;
+                                console.log('设置用户数量:', allUsers.length);
+                            }
+                            if (featuredModsEl) {
+                                featuredModsEl.textContent = featuredMods.length;
+                                console.log('设置推荐模组数:', featuredMods.length);
+                            }
+                            
+                            // 生成分类图表
+                            this.generateCategoryChart(mods);
+                            
+                            // 生成最近活动
+                            this.generateRecentActivity(mods);
+                            
+                            console.log('统计信息加载成功:', {
+                                mods: mods.length,
+                                categories: categories.size,
+                                users: allUsers.length,
+                                featured: featuredMods.length
+                            });
+                        })
+                        .catch(error => {
+                            console.error('加载统计信息失败:', error);
+                            this.setDefaultStats();
+                        });
                 } catch (error) {
                     console.error('加载统计信息失败:', error);
-                    // 设置默认值 - 确保元素存在
-                    const totalModsEl = document.getElementById('totalMods');
-                    const totalCategoriesEl = document.getElementById('totalCategories');
-                    const totalUsersEl = document.getElementById('totalUsers');
-                    const featuredModsEl = document.getElementById('featuredMods');
-                    
-                    console.log('错误处理 - 找到的元素:', {
-                        totalModsEl: !!totalModsEl,
-                        totalCategoriesEl: !!totalCategoriesEl,
-                        totalUsersEl: !!totalUsersEl,
-                        featuredModsEl: !!featuredModsEl
-                    });
-                    
-                    if (totalModsEl) totalModsEl.textContent = '0';
-                    if (totalCategoriesEl) totalCategoriesEl.textContent = '0';
-                    if (totalUsersEl) totalUsersEl.textContent = '0';
-                    if (featuredModsEl) featuredModsEl.textContent = '0';
-                    
-                    // 显示错误信息
-                    const categoryChart = document.getElementById('categoryChart');
-                    const recentActivity = document.getElementById('recentActivity');
-                    
-                    if (categoryChart) categoryChart.innerHTML = '<p style="color: #a0aec0; text-align: center;">数据加载失败</p>';
-                    if (recentActivity) recentActivity.innerHTML = '<p style="color: #a0aec0; text-align: center;">数据加载失败</p>';
+                    this.setDefaultStats();
                 }
+            }
+            
+            // 加载模组数据（支持JSON文件和localStorage回退）
+            loadModsData() {
+                return new Promise((resolve, reject) => {
+                    // 首先尝试从JSON文件加载
+                    fetch('data/mods.json')
+                        .then(response => response.json())
+                        .then(mods => {
+                            // 同时更新localStorage作为备份
+                            localStorage.setItem('dayz_mods_production', JSON.stringify(mods));
+                            resolve(mods);
+                        })
+                        .catch(error => {
+                            console.log('JSON文件加载失败，尝试从localStorage加载:', error);
+                            // 从localStorage加载备份数据
+                            const backupMods = localStorage.getItem('dayz_mods_production');
+                            if (backupMods) {
+                                resolve(JSON.parse(backupMods));
+                            } else {
+                                resolve([]); // 返回空数组而不是拒绝
+                            }
+                        });
+                });
+            }
+            
+            // 设置默认统计值
+            setDefaultStats() {
+                const totalModsEl = document.getElementById('totalMods');
+                const totalCategoriesEl = document.getElementById('totalCategories');
+                const totalUsersEl = document.getElementById('totalUsers');
+                const featuredModsEl = document.getElementById('featuredMods');
+                
+                console.log('错误处理 - 找到的元素:', {
+                    totalModsEl: !!totalModsEl,
+                    totalCategoriesEl: !!totalCategoriesEl,
+                    totalUsersEl: !!totalUsersEl,
+                    featuredModsEl: !!featuredModsEl
+                });
+                
+                if (totalModsEl) totalModsEl.textContent = '0';
+                if (totalCategoriesEl) totalCategoriesEl.textContent = '0';
+                if (totalUsersEl) totalUsersEl.textContent = '0';
+                if (featuredModsEl) featuredModsEl.textContent = '0';
+                
+                // 显示错误信息
+                const categoryChart = document.getElementById('categoryChart');
+                const recentActivity = document.getElementById('recentActivity');
+                
+                if (categoryChart) categoryChart.innerHTML = '<p style="color: #a0aec0; text-align: center;">数据加载失败</p>';
+                if (recentActivity) recentActivity.innerHTML = '<p style="color: #a0aec0; text-align: center;">数据加载失败</p>';
             }
             
             // 生成分类图表
@@ -704,6 +809,132 @@
                 
                 activityHTML += '</select>';
                 recentActivity.innerHTML = activityHTML;
+            }
+            
+            // 批量下载JSON文件
+            batchDownloadJson() {
+                this.loadModsData()
+                    .then(mods => {
+                        if (mods.length === 0) {
+                            this.showNotification('暂无模组数据，无法下载', 'error');
+                            return;
+                        }
+                        
+                        // 创建JSON数据
+                        const jsonData = JSON.stringify(mods, null, 2);
+                        
+                        // 创建Blob对象
+                        const blob = new Blob([jsonData], { type: 'application/json' });
+                        
+                        // 创建下载链接
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = URL.createObjectURL(blob);
+                        downloadLink.download = 'mods.json';
+                        
+                        // 触发下载
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                        
+                        // 释放URL对象
+                        URL.revokeObjectURL(downloadLink.href);
+                        
+                        this.showNotification(`成功下载模组数据，共 ${mods.length} 个模组`, 'success');
+                        
+                        // 记录下载活动
+                        this.logBatchDownloadActivity(mods.length);
+                    })
+                    .catch(error => {
+                        console.error('批量下载失败:', error);
+                        this.showNotification('批量下载失败，请检查数据', 'error');
+                    });
+            }
+            
+            // 记录批量下载活动
+            logBatchDownloadActivity(modCount) {
+                const activity = {
+                    type: 'batch_download',
+                    timestamp: new Date().toISOString(),
+                    modCount: modCount,
+                    message: `批量下载了 ${modCount} 个模组数据`
+                };
+                
+                // 获取现有活动记录
+                const activities = JSON.parse(localStorage.getItem('admin_activities') || '[]');
+                
+                // 添加新活动
+                activities.unshift(activity);
+                
+                // 只保留最近50条记录
+                if (activities.length > 50) {
+                    activities.splice(50);
+                }
+                
+                // 保存活动记录
+                localStorage.setItem('admin_activities', JSON.stringify(activities));
+            }
+            
+            // 批量下载JSON文件
+            batchDownloadJson() {
+                this.loadModsData()
+                    .then(mods => {
+                        if (mods.length === 0) {
+                            this.showNotification('暂无模组数据，无法下载', 'error');
+                            return;
+                        }
+                        
+                        // 创建JSON数据
+                        const jsonData = JSON.stringify(mods, null, 2);
+                        
+                        // 创建Blob对象
+                        const blob = new Blob([jsonData], { type: 'application/json' });
+                        
+                        // 创建下载链接
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = URL.createObjectURL(blob);
+                        downloadLink.download = 'mods.json';
+                        
+                        // 触发下载
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                        
+                        // 释放URL对象
+                        URL.revokeObjectURL(downloadLink.href);
+                        
+                        this.showNotification(`成功下载模组数据，共 ${mods.length} 个模组`, 'success');
+                        
+                        // 记录下载活动
+                        this.logBatchDownloadActivity(mods.length);
+                    })
+                    .catch(error => {
+                        console.error('批量下载失败:', error);
+                        this.showNotification('批量下载失败，请检查数据', 'error');
+                    });
+            }
+            
+            // 记录批量下载活动
+            logBatchDownloadActivity(modCount) {
+                const activity = {
+                    type: 'batch_download',
+                    timestamp: new Date().toISOString(),
+                    modCount: modCount,
+                    message: `批量下载了 ${modCount} 个模组数据`
+                };
+                
+                // 获取现有活动记录
+                const activities = JSON.parse(localStorage.getItem('admin_activities') || '[]');
+                
+                // 添加新活动
+                activities.unshift(activity);
+                
+                // 只保留最近50条记录
+                if (activities.length > 50) {
+                    activities.splice(50);
+                }
+                
+                // 保存活动记录
+                localStorage.setItem('admin_activities', JSON.stringify(activities));
             }
             
             // 显示通知

@@ -173,99 +173,144 @@
             initScrollAnimations();
         });
         
+        // 加载模组数据（支持JSON文件和localStorage回退）
+        function loadModsData() {
+            return new Promise((resolve, reject) => {
+                // 首先尝试从JSON文件加载
+                fetch('data/mods.json')
+                    .then(response => response.json())
+                    .then(mods => {
+                        // 同时更新localStorage作为备份
+                        localStorage.setItem('dayz_mods_production', JSON.stringify(mods));
+                        resolve(mods);
+                    })
+                    .catch(error => {
+                        console.log('JSON文件加载失败，尝试从localStorage加载:', error);
+                        // 从localStorage加载备份数据
+                        const backupMods = localStorage.getItem('dayz_mods_production');
+                        if (backupMods) {
+                            resolve(JSON.parse(backupMods));
+                        } else {
+                            resolve([]); // 返回空数组而不是拒绝
+                        }
+                    });
+            });
+        }
+        
         // 加载首页特色模组
         function loadFeaturedMods() {
             console.log('开始加载首页特色模组...');
             
-            const mods = JSON.parse(localStorage.getItem('dayz_mods_production') || '[]');
-            console.log('从localStorage加载的模组数据:', mods);
-            
-            const featuredMods = mods.filter(mod => mod.featured).slice(0, 3); // 最多显示3个
-            console.log('筛选出的首页显示模组:', featuredMods);
-            
-            const noFeaturedMods = document.getElementById('noFeaturedMods');
-            const featuredModsGrid = document.getElementById('featuredModsGrid');
-            
-            console.log('找到的模组容器:', noFeaturedMods, featuredModsGrid);
-            
-            if (featuredMods.length > 0) {
-                noFeaturedMods.style.display = 'none';
-                featuredModsGrid.style.display = 'grid';
-                featuredModsGrid.innerHTML = '';
-                
-                featuredMods.forEach(mod => {
-                    const modCard = document.createElement('div');
-                    modCard.className = 'featured-mod-card';
-                    modCard.innerHTML = `
-                        <div class="featured-mod-badge">⭐ 推荐</div>
-                        <div class="featured-mod-image">
-                            <img src="${mod.image}" alt="${mod.name}" class="zoomable-image" data-zoom-src="${mod.image}">
-                            <div class="featured-mod-overlay">
-                                <div class="featured-mod-actions">
-                                    <a href="details.html?item=${mod.id}" class="btn btn-primary">查看详情</a>
+            // 从JSON文件或localStorage加载模组数据 - 移除重复的catch块
+            loadModsData()
+                .then(mods => {
+                    console.log('加载的模组数据:', mods);
+                    
+                    const featuredMods = mods.filter(mod => mod.featured).slice(0, 3); // 最多显示3个
+                    console.log('筛选出的首页显示模组:', featuredMods);
+                    
+                    const noFeaturedMods = document.getElementById('noFeaturedMods');
+                    const featuredModsGrid = document.getElementById('featuredModsGrid');
+                    
+                    console.log('找到的模组容器:', noFeaturedMods, featuredModsGrid);
+                    
+                    if (featuredMods.length > 0) {
+                        // 先移除内联样式，使用CSS类控制显示
+                        noFeaturedMods.style.display = 'none';
+                        featuredModsGrid.style.display = 'grid';
+                        
+                        // 清空容器
+                        featuredModsGrid.innerHTML = '';
+                        
+                        featuredMods.forEach(mod => {
+                            const modCard = document.createElement('div');
+                            modCard.className = 'featured-mod-card';
+                            
+                            // 修复图片路径，确保使用正斜杠
+                            const imagePath = mod.image ? mod.image.replace(/\\/g, '/') : 'images/weapon-mod.png';
+                            
+                            modCard.innerHTML = `
+                                <div class="featured-mod-badge">⭐ 推荐</div>
+                                <div class="featured-mod-image">
+                                    <img src="${imagePath}" alt="${mod.name}" class="zoomable-image" data-zoom-src="${imagePath}" onerror="this.src='images/weapon-mod.png'">
+                                    <div class="featured-mod-overlay">
+                                        <div class="featured-mod-actions">
+                                            <a href="details.html?item=${mod.id}" class="btn btn-primary">查看详情</a>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="featured-mod-info">
-                            <h4 class="featured-mod-title">${mod.name}</h4>
-                            <p class="featured-mod-description">${mod.description}</p>
-                            <div class="featured-mod-tags">
-                                <span class="tag tag-category">${mod.category}</span>
-                                <span class="tag tag-module">${mod.module}</span>
-                            </div>
-                            <div class="featured-mod-footer">
-                                <span class="featured-mod-author">作者: ${mod.author || 'SKY'}</span>
-                                <span class="featured-mod-version">${mod.version ? mod.version.replace(/^v+/i, 'v') : 'v1.0'}</span>
-                            </div>
-                        </div>
-                    `;
-                    featuredModsGrid.appendChild(modCard);
+                                <div class="featured-mod-info">
+                                    <h4 class="featured-mod-title">${mod.name}</h4>
+                                    <p class="featured-mod-description">${mod.description}</p>
+                                    <div class="featured-mod-tags">
+                                        <span class="tag tag-category">${mod.category}</span>
+                                        <span class="tag tag-module">${mod.module}</span>
+                                    </div>
+                                    <div class="featured-mod-footer">
+                                        <span class="featured-mod-author">作者: ${mod.author || 'SKY'}</span>
+                                        <span class="featured-mod-version">${mod.version ? mod.version.replace(/^v+/i, 'v') : 'v1.0'}</span>
+                                    </div>
+                                </div>
+                            `;
+                            featuredModsGrid.appendChild(modCard);
+                        });
+                        
+                        console.log('特色模组卡片已添加到页面');
+                        
+                        // 强制重绘，解决CSS显示问题
+                        setTimeout(() => {
+                            featuredModsGrid.style.display = 'none';
+                            featuredModsGrid.offsetHeight; // 触发重排
+                            featuredModsGrid.style.display = 'grid';
+                        }, 10);
+                        
+                        // 初始化图片放大功能
+                        if (typeof initImageZoom === 'function') {
+                            setTimeout(() => {
+                                initImageZoom();
+                                console.log('图片放大功能已初始化');
+                            }, 100);
+                        } else {
+                            console.warn('initImageZoom函数未找到，跳过图片放大功能初始化');
+                        }
+                    } else {
+                        noFeaturedMods.style.display = 'flex';
+                        featuredModsGrid.style.display = 'none';
+                        console.log('没有设置首页显示的模组，显示空状态');
+                    }
                 });
-                
-                console.log('特色模组卡片已添加到页面');
-                
-                // 初始化图片放大功能
-                if (typeof initImageZoom === 'function') {
-                    initImageZoom();
-                    console.log('图片放大功能已初始化');
-                } else {
-                    console.warn('initImageZoom函数未找到，跳过图片放大功能初始化');
-                }
-            } else {
-                noFeaturedMods.style.display = 'flex';
-                featuredModsGrid.style.display = 'none';
-                console.log('没有设置首页显示的模组，显示空状态');
-            }
         }
         
         // 数字动画效果
         function animateStats() {
             const statNumbers = document.querySelectorAll('.stat-number');
             
-            // 获取模组总数
-            const mods = JSON.parse(localStorage.getItem('dayz_mods_production') || '[]');
-            const modCount = mods.length;
-            
-            statNumbers.forEach(stat => {
-                // 如果是优质模组统计项，直接显示模组总数
-                if (stat.parentElement.querySelector('.stat-label').textContent === '优质模组') {
-                    stat.textContent = modCount;
-                } else {
-                    const target = parseInt(stat.getAttribute('data-count'));
-                    const duration = 2000; // 2秒
-                    const step = target / (duration / 16); // 60fps
-                    let current = 0;
+            // 从JSON文件或localStorage获取模组总数
+            loadModsData()
+                .then(mods => {
+                    const modCount = mods.length;
                     
-                    const timer = setInterval(() => {
-                        current += step;
-                        if (current >= target) {
-                            current = target;
-                            clearInterval(timer);
+                    statNumbers.forEach(stat => {
+                        // 如果是优质模组统计项，直接显示模组总数
+                        if (stat.parentElement.querySelector('.stat-label').textContent === '优质模组') {
+                            stat.textContent = modCount;
+                        } else {
+                            const target = parseInt(stat.getAttribute('data-count'));
+                            const duration = 2000; // 2秒
+                            const step = target / (duration / 16); // 60fps
+                            let current = 0;
+                            
+                            const timer = setInterval(() => {
+                                current += step;
+                                if (current >= target) {
+                                    current = target;
+                                    clearInterval(timer);
+                                }
+                                stat.textContent = Math.floor(current);
+                            }, 16);
                         }
-                        stat.textContent = Math.floor(current);
-                    }, 16);
-                }
-            });
+                    });
+                });
         }
         
         // 滚动动画效果

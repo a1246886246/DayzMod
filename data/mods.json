@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1763555475322",
+    "name": "持续上新",
+    "description": "持续上新",
+    "category": "武器",
+    "module": "枪械",
+    "version": "1.0.0",
+    "size": "0MB",
+    "image": "images\\weapon-mod.png",
+    "downloadUrl": "",
+    "features": [],
+    "screenshots": [],
+    "compatibility": {
+      "gameVersion": "DayZ 1.28",
+      "requiredMods": "无",
+      "serverSide": "客户端/服务端"
+    },
+    "featured": false,
+    "createdAt": "2025-11-19T12:31:15.322Z"
+  },
+  {
+    "id": "1763554663578",
+    "name": "sky_weapons_aug01",
+    "description": "AUG",
+    "category": "武器",
+    "module": "枪械",
+    "version": "1.0.0",
+    "size": "17.1MB",
+    "image": "images\\weapon1\\sky_weapons_aug01\\00.png",
+    "downloadUrl": "",
+    "features": [
+      "无后座 弹道无下坠"
+    ],
+    "screenshots": [
+      "images\\weapon1\\sky_weapons_aug01\\01.png",
+      "images\\weapon1\\sky_weapons_aug01\\02.png"
+    ],
+    "compatibility": {
+      "gameVersion": "DayZ 1.28",
+      "requiredMods": "无",
+      "serverSide": "客户端/服务端"
+    },
+    "featured": true,
+    "createdAt": "2025-11-19T12:17:43.578Z"
+  }
+]
